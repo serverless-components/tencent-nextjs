@@ -10,9 +10,9 @@
 
 0. [准备](#0-准备)
 1. [安装](#1-安装)
-1. [配置](#2-配置)
-1. [部署](#3-部署)
-1. [移除](#4-移除)
+2. [配置](#2-配置)
+3. [部署](#3-部署)
+4. [移除](#4-移除)
 
 ### 0. 准备
 
@@ -79,24 +79,21 @@ $ touch serverless.yml
 
 ```yml
 # serverless.yml
-
-MyComponent:
+nextjsTest:
   component: '@serverless/tencent-nextjs'
   inputs:
+    functionName: nextjs-function
     region: ap-guangzhou
-    functionName: egg-function
     code: ./
     functionConf:
-      timeout: 10
+      timeout: 30
       memorySize: 128
-      environment:
-        variables:
-          TEST: vale
-      vpcConfig:
-        subnetId: ''
-        vpcId: ''
+    environment:
+      variables:
+        RUN_ENV: test
     apigatewayConf:
       protocols:
+        - http
         - https
       environment: release
 ```
@@ -111,6 +108,41 @@ MyComponent:
 
 ```bash
 $ sls --debug
+
+  DEBUG ─ Resolving the template's static variables.
+  DEBUG ─ Collecting components from the template.
+  DEBUG ─ Downloading any NPM components found in the template.
+  DEBUG ─ Analyzing the template's components dependencies.
+  DEBUG ─ Creating the template's components graph.
+  DEBUG ─ Syncing template state.
+  DEBUG ─ Executing the template's components graph.
+  DEBUG ─ Compressing function nextjs-function file to /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip.
+  DEBUG ─ Compressed function nextjs-function file successful
+  DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1582430808.zip
+  DEBUG ─ Uploaded package successful /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip
+  DEBUG ─ Creating function nextjs-function
+  DEBUG ─ Updating code... 
+  DEBUG ─ Updating configure... 
+  DEBUG ─ Created function nextjs-function successful
+  DEBUG ─ Setting tags for function nextjs-function
+  DEBUG ─ Creating trigger for function nextjs-function
+  DEBUG ─ Deployed function nextjs-function successful
+  DEBUG ─ Starting API-Gateway deployment with name nextjsTest.TencentApiGateway in the ap-guangzhou region
+  DEBUG ─ Using last time deploy service id service-32okcrfq
+  DEBUG ─ Updating service with serviceId service-32okcrfq.
+  DEBUG ─ Endpoint ANY / already exists with id api-5242vfgi.
+  DEBUG ─ Updating api with api id api-5242vfgi.
+  DEBUG ─ Service with id api-5242vfgi updated.
+  DEBUG ─ Deploying service with id service-32okcrfq.
+  DEBUG ─ Deployment successful for the api named nextjsTest.TencentApiGateway in the ap-guangzhou region.
+
+  nextjsTest: 
+    region:              ap-guangzhou
+    functionName:        nextjs-function
+    apiGatewayServiceId: service-32okcrfq
+    url:                 https://service-32okcrfq-1251556596.gz.apigw.tencentcs.com/release/
+
+  34s › nextjsTest › done
 ```
 
 > 注意: `sls` 是 `serverless` 命令的简写。
@@ -121,6 +153,15 @@ $ sls --debug
 
 ```bash
 $ sls remove --debug
+
+  DEBUG ─ Flushing template state and removing all components.
+  DEBUG ─ Removing function
+  DEBUG ─ Request id
+  DEBUG ─ Removed function nextjs-function successful
+  DEBUG ─ Removing any previously deployed API. api-5242vfgi
+  DEBUG ─ Removing any previously deployed service. service-32okcrfq
+
+  11s › nextjsTest › done
 ```
 
 ### 账号配置（可选）
