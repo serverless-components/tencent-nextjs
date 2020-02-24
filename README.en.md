@@ -4,7 +4,7 @@
 
 ## Introduction
 
-[Next.js](https://github.com/eggjs/egg) Serverless Component for Tencent Cloud, support Restful API deploy.
+[Next.js](https://github.com/eggjs/egg) Serverless Component for Tencent Cloud.
 
 ## Content
 

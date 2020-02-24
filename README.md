@@ -4,7 +4,7 @@
 
 ## 简介
 
-腾讯云 [Next.js](https://github.com/eggjs/egg) Serverless Component, 支持 Restful API 服务的部署。
+腾讯云 [Next.js](https://github.com/eggjs/egg) Serverless Component。
 
 ## 目录
 
