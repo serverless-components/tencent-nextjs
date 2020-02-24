@@ -1,5 +1,5 @@
-nextjsTest:
-  component: ../
+NextjsFunc:
+  component: '@serverless/tencent-nextjs'
   inputs:
     functionName: nextjs-function
     region: ap-guangzhou

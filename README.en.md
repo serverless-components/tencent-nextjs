@@ -93,7 +93,7 @@ TENCENT_SECRET_KEY=XXX
 
 ```yml
 # serverless.yml
-nextjsTest:
+NextjsFunc:
   component: '@serverless/tencent-nextjs'
   inputs:
     functionName: nextjs-function
@@ -137,22 +137,22 @@ $ sls --debug
   DEBUG ─ Setting tags for function nextjs-function
   DEBUG ─ Creating trigger for function nextjs-function
   DEBUG ─ Deployed function nextjs-function successful
-  DEBUG ─ Starting API-Gateway deployment with name nextjsTest.TencentApiGateway in the ap-guangzhou region
+  DEBUG ─ Starting API-Gateway deployment with name NextjsFunc.TencentApiGateway in the ap-guangzhou region
   DEBUG ─ Using last time deploy service id service-32okcrfq
   DEBUG ─ Updating service with serviceId service-32okcrfq.
   DEBUG ─ Endpoint ANY / already exists with id api-5242vfgi.
   DEBUG ─ Updating api with api id api-5242vfgi.
   DEBUG ─ Service with id api-5242vfgi updated.
   DEBUG ─ Deploying service with id service-32okcrfq.
-  DEBUG ─ Deployment successful for the api named nextjsTest.TencentApiGateway in the ap-guangzhou region.
+  DEBUG ─ Deployment successful for the api named NextjsFunc.TencentApiGateway in the ap-guangzhou region.
 
-  nextjsTest: 
+  NextjsFunc: 
     region:              ap-guangzhou
     functionName:        nextjs-function
     apiGatewayServiceId: service-32okcrfq
     url:                 https://service-32okcrfq-1251556596.gz.apigw.tencentcs.com/release/
 
-  34s › nextjsTest › done
+  34s › NextjsFunc › done
 ```
 
 > Notice: `sls` is short for `serverless` command.
@@ -171,7 +171,7 @@ $ sls remove --debug
   DEBUG ─ Removing any previously deployed API. api-5242vfgi
   DEBUG ─ Removing any previously deployed service. service-32okcrfq
 
-  11s › nextjsTest › done
+  11s › NextjsFunc › done
 ```
 
 ### More Components
