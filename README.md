@@ -20,7 +20,7 @@
 
 ### 0. 准备
 
-#### 初始化 Egg 项目
+#### 初始化 Next.js 项目
 
 ```bash
 $ npm init next-app
