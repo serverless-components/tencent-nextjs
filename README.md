@@ -1,3 +1,7 @@
+[![Serverless Nextjs Tencent Cloud](https://img.serverlesscloud.cn/2020224/1582553715762-next.js_%E9%95%BF.png)](http://serverless.com)
+
+&nbsp;
+
 # 腾讯云 Next.js Serverless Component
 
 简体中文 | [English](https://github.com/serverless-components/tencent-nextjs/blob/master/README.en.md)
