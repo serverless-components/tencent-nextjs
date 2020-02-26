@@ -14,10 +14,10 @@
 
 0. [Prepare](#0-prepare)
 1. [Install](#1-install)
-2. [Create](#2-create)
-3. [Configure](#3-configure)
-4. [Deploy](#4-deploy)
-5. [Remove](#5-Remove)
+1. [Create](#2-create)
+1. [Configure](#3-configure)
+1. [Deploy](#4-deploy)
+1. [Remove](#5-Remove)
 
 ### 0. Prepare
 
@@ -32,14 +32,14 @@ $ npm init next-app
 Create `sls.js` file in project root, as below:
 
 ```js
-const express = require('express');
-const next = require('next');
+const express = require('express')
+const next = require('next')
 
-const app = next({ dev: false });
-const handle = app.getRequestHandler();
+const app = next({ dev: false })
+const handle = app.getRequestHandler()
 
 async function creatServer() {
-  await app.prepare();
+  await app.prepare()
   const server = express()
 
   server.all('*', (req, res) => {
@@ -48,9 +48,7 @@ async function creatServer() {
 
   // define binary type for response
   // if includes, will return base64 encoded, very useful for images
-  server.binaryTypes = [
-    '*/*',
-  ]
+  server.binaryTypes = ['*/*']
 
   return server
 }
@@ -120,6 +118,14 @@ NextjsFunc:
 
 ### 4. Deploy
 
+#### 4.1 Build static assets
+
+```bash
+$ npm run build
+```
+
+#### 4.2 Deploy to cloud
+
 ```bash
 $ sls --debug
 
@@ -135,8 +141,8 @@ $ sls --debug
   DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1582430808.zip
   DEBUG ─ Uploaded package successful /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip
   DEBUG ─ Creating function nextjs-function
-  DEBUG ─ Updating code... 
-  DEBUG ─ Updating configure... 
+  DEBUG ─ Updating code...
+  DEBUG ─ Updating configure...
   DEBUG ─ Created function nextjs-function successful
   DEBUG ─ Setting tags for function nextjs-function
   DEBUG ─ Creating trigger for function nextjs-function
@@ -150,7 +156,7 @@ $ sls --debug
   DEBUG ─ Deploying service with id service-32okcrfq.
   DEBUG ─ Deployment successful for the api named NextjsFunc.TencentApiGateway in the ap-guangzhou region.
 
-  NextjsFunc: 
+  NextjsFunc:
     region:              ap-guangzhou
     functionName:        nextjs-function
     apiGatewayServiceId: service-32okcrfq

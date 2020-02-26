@@ -14,9 +14,9 @@
 
 0. [准备](#0-准备)
 1. [安装](#1-安装)
-2. [配置](#2-配置)
-3. [部署](#3-部署)
-4. [移除](#4-移除)
+1. [配置](#2-配置)
+1. [部署](#3-部署)
+1. [移除](#4-移除)
 
 ### 0. 准备
 
@@ -31,14 +31,14 @@ $ npm init next-app
 在项目根目录下新建文件 `sls.js`，内容如下：
 
 ```js
-const express = require('express');
-const next = require('next');
+const express = require('express')
+const next = require('next')
 
-const app = next({ dev: false });
-const handle = app.getRequestHandler();
+const app = next({ dev: false })
+const handle = app.getRequestHandler()
 
 async function creatServer() {
-  await app.prepare();
+  await app.prepare()
   const server = express()
 
   server.all('*', (req, res) => {
@@ -47,9 +47,7 @@ async function creatServer() {
 
   // 定义是否返回 base64 编码的文件 mime 类型。默认是所有文件，因为 next.js 默认 build 开启 gzip.
   // 如果需要修改，请先理解 gzip 的文件编码方式。
-  server.binaryTypes = [
-    '*/*',
-  ]
+  server.binaryTypes = ['*/*']
 
   return server
 }
@@ -106,6 +104,14 @@ NextjsFunc:
 
 ### 3. 部署
 
+#### 3.1 构建静态资源
+
+```bash
+$ npm run build
+```
+
+#### 3.2 部署到云端
+
 如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
 
 通过 `sls` 命令进行部署，并可以添加 `--debug` 参数查看部署过程中的信息
@@ -125,8 +131,8 @@ $ sls --debug
   DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1582430808.zip
   DEBUG ─ Uploaded package successful /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip
   DEBUG ─ Creating function nextjs-function
-  DEBUG ─ Updating code... 
-  DEBUG ─ Updating configure... 
+  DEBUG ─ Updating code...
+  DEBUG ─ Updating configure...
   DEBUG ─ Created function nextjs-function successful
   DEBUG ─ Setting tags for function nextjs-function
   DEBUG ─ Creating trigger for function nextjs-function
@@ -140,7 +146,7 @@ $ sls --debug
   DEBUG ─ Deploying service with id service-32okcrfq.
   DEBUG ─ Deployment successful for the api named NextjsFunc.TencentApiGateway in the ap-guangzhou region.
 
-  NextjsFunc: 
+  NextjsFunc:
     region:              ap-guangzhou
     functionName:        nextjs-function
     apiGatewayServiceId: service-32okcrfq
