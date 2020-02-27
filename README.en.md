@@ -4,11 +4,14 @@
 
 # Tencent Next.js Serverless Component
 
+[![npm](https://img.shields.io/npm/v/%40serverless%2Ftencent-nextjs)](http://www.npmtrends.com/%40serverless%2Ftencent-nextjs)
+[![NPM downloads](http://img.shields.io/npm/dm/%40serverless%2Ftencent-nextjs.svg?style=flat-square)](http://www.npmtrends.com/%40serverless%2Ftencent-nextjs)
+
 [简体中文](https://github.com/serverless-components/tencent-nextjs/blob/master/README.md) | English
 
 ## Introduction
 
-[Next.js](https://github.com/eggjs/egg) Serverless Component for Tencent Cloud.
+[Next.js](https://github.com/zeit/next.js) Serverless Component for Tencent Cloud.
 
 ## Content
 
