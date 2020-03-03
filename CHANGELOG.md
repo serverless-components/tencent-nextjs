@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.1...v0.1.2) (2020-03-03)
+
+
+### Bug Fixes
+
+* remove add sls.js step ([daaf5df](https://github.com/serverless-components/tencent-nextjs/commit/daaf5dfd81d980044fcf62a73b599e839287c8ad))
+
 ### 0.1.1 (2020-02-27)
 
 
