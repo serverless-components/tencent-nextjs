@@ -27,7 +27,7 @@ class TencentEgg extends Component {
     inputs.name =
       ensureString(inputs.functionName, { isOptional: true }) ||
       this.state.functionName ||
-      `EggComponent_${random({ length: 6 })}`
+      `NextjsComponent_${random({ length: 6 })}`
     inputs.codeUri = ensureString(inputs.code, { isOptional: true }) || process.cwd()
     inputs.region = ensureString(inputs.region, { default: 'ap-guangzhou' })
     inputs.include = ensureIterable(inputs.include, { default: [], ensureItem: ensureString })

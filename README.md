@@ -171,3 +171,7 @@ TENCENT_SECRET_KEY=123
 ### 更多组件
 
 可以在 [Serverless Components](https://github.com/serverless/components) repo 中查询更多组件的信息。
+
+### FAQ
+
+1. [为什么不需要入口文件了？](https://github.com/serverless-components/tencent-nextjs/issues/1)
