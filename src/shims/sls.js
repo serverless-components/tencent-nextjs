@@ -5,7 +5,7 @@ const pkg = require.fromParentEnvironment('./package.json')
 const app = next({ dev: false })
 const handle = app.getRequestHandler()
 
-async function creatServer() {
+async function createServer() {
   await app.prepare()
   const server = express()
 
@@ -20,4 +20,4 @@ async function creatServer() {
   return server
 }
 
-module.exports = creatServer
+module.exports = createServer
