@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/serverless-components/tencent-nextjs/compare/v0.2.0...v0.2.1) (2020-03-12)
+
+
+### Bug Fixes
+
+* apigw namespace ([489ea2e](https://github.com/serverless-components/tencent-nextjs/commit/489ea2e792cba4b370a1f96d6691a44159452c21))
+* wrong word ([ff0a1fa](https://github.com/serverless-components/tencent-nextjs/commit/ff0a1fa487f55866f888f9b2223c1d3189906055))
+
 ## [0.2.0](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.2...v0.2.0) (2020-03-04)
 
 
