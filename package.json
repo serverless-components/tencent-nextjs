@@ -1,7 +1,7 @@
 {
   "name": "@serverless/tencent-nextjs",
   "description": "Tencent Cloud Next.js Serverless Component",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "main": "serverless.js",
   "publishConfig": {
     "access": "public"
