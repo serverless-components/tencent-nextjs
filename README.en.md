@@ -110,33 +110,42 @@ $ sls --debug
   DEBUG ─ Creating the template's components graph.
   DEBUG ─ Syncing template state.
   DEBUG ─ Executing the template's components graph.
+  DEBUG ─ Generating serverless handler...
+  DEBUG ─ Generated serverless handler successfully.
   DEBUG ─ Compressing function nextjs-function file to /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip.
   DEBUG ─ Compressed function nextjs-function file successful
-  DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1582430808.zip
+  DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1584351212.zip
   DEBUG ─ Uploaded package successful /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip
   DEBUG ─ Creating function nextjs-function
-  DEBUG ─ Updating code...
-  DEBUG ─ Updating configure...
+  nextjs-function [████████████████████████████████████████] 100% | ETA: 0s | Speed: 1039.75k/s
   DEBUG ─ Created function nextjs-function successful
   DEBUG ─ Setting tags for function nextjs-function
   DEBUG ─ Creating trigger for function nextjs-function
   DEBUG ─ Deployed function nextjs-function successful
-  DEBUG ─ Starting API-Gateway deployment with name NextjsFunc.TencentApiGateway in the ap-guangzhou region
-  DEBUG ─ Using last time deploy service id service-32okcrfq
-  DEBUG ─ Updating service with serviceId service-32okcrfq.
-  DEBUG ─ Endpoint ANY / already exists with id api-5242vfgi.
-  DEBUG ─ Updating api with api id api-5242vfgi.
-  DEBUG ─ Service with id api-5242vfgi updated.
-  DEBUG ─ Deploying service with id service-32okcrfq.
-  DEBUG ─ Deployment successful for the api named NextjsFunc.TencentApiGateway in the ap-guangzhou region.
+  DEBUG ─ Starting API-Gateway deployment with name ap-guangzhou-apigateway in the ap-guangzhou region
+  DEBUG ─ Service with ID service-8knyukzy created.
+  DEBUG ─ API with id api-eimhu8pa created.
+  DEBUG ─ Deploying service with id service-8knyukzy.
+  DEBUG ─ Deployment successful for the api named ap-guangzhou-apigateway in the ap-guangzhou region.
 
   NextjsFunc:
-    region:              ap-guangzhou
     functionName:        nextjs-function
-    apiGatewayServiceId: service-32okcrfq
-    url:                 https://service-32okcrfq-1251556596.gz.apigw.tencentcs.com/release/
+    functionOutputs:
+      ap-guangzhou:
+        Name:        nextjs-function
+        Runtime:     Nodejs8.9
+        Handler:     serverless-handler.handler
+        MemorySize:  128
+        Timeout:     30
+        Region:      ap-guangzhou
+        Namespace:   default
+        Description: This is a template function
+    region:              ap-guangzhou
+    apiGatewayServiceId: service-8knyukzy
+    url:                 https://service-8knyukzy-1251556596.gz.apigw.tencentcs.com/release/
+    cns:                 (empty array)
 
-  34s › NextjsFunc › done
+  33s › NextjsFunc › done
 ```
 
 > Notice: `sls` is short for `serverless` command.
@@ -149,13 +158,11 @@ $ sls --debug
 $ sls remove --debug
 
   DEBUG ─ Flushing template state and removing all components.
-  DEBUG ─ Removing function
-  DEBUG ─ Request id
   DEBUG ─ Removed function nextjs-function successful
-  DEBUG ─ Removing any previously deployed API. api-5242vfgi
-  DEBUG ─ Removing any previously deployed service. service-32okcrfq
+  DEBUG ─ Removing any previously deployed API. api-eimhu8pa
+  DEBUG ─ Removing any previously deployed service. service-8knyukzy
 
-  11s › NextjsFunc › done
+  7s › NextjsFunc › done
 ```
 
 ### More Components
