@@ -60,6 +60,7 @@ NextjsFunc:
   inputs:
     functionName: nextjs-function
     region: ap-guangzhou
+    runtime: Nodejs8.9
     code: ./
     functionConf:
       timeout: 30
