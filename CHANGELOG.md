@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/serverless-components/tencent-nextjs/compare/v1.0.3...v1.0.4) (2020-04-03)
+
+
+### Bug Fixes
+
+* update dependencies ([c0043b6](https://github.com/serverless-components/tencent-nextjs/commit/c0043b6e1bb96c0a8598c4b4fcb7e7481ce4ba42))
+
 ### [1.0.3](https://github.com/serverless-components/tencent-nextjs/compare/v1.0.2...v1.0.3) (2020-03-27)
 
 
