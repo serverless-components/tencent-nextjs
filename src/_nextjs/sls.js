@@ -1,6 +1,5 @@
-const express = require.fromParentEnvironment('express')
-const next = require.fromParentEnvironment('next')
-const pkg = require.fromParentEnvironment('./package.json')
+const express = require('express')
+const next = require('next')
 
 const app = next({ dev: false })
 const handle = app.getRequestHandler()
@@ -15,7 +14,7 @@ async function createServer() {
 
   // define binary type for response
   // if includes, will return base64 encoded, very useful for images
-  server.binaryTypes = pkg.binaryTypes || ['*/*']
+  server.binaryTypes = ['*/*']
 
   return server
 }

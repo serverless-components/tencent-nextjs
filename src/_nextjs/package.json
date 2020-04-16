@@ -1,0 +1,18 @@
+{
+  "name": "@serverless/nextjs",
+  "version": "0.0.1",
+  "main": "./handler.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --fix --cache"
+  },
+  "author": "Serverless, Inc.",
+  "license": "Apache",
+  "dependencies": {
+    "express": "^4.17.1",
+    "tencent-serverless-http": "^1.0.7"
+  }
+}

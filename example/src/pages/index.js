@@ -16,12 +16,6 @@ const Home = () => (
       <p className="description">
         Get started by editing <code>pages/index.js</code>
       </p>
-
-      <div className="grid">
-        <Link href="/async">
-          <a style={{width: '300px', padding: '10px', margin: '5px'}} className="card">Async Page</a>
-        </Link>
-      </div>
     </main>
 
     <footer>
