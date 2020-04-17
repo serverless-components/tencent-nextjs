@@ -5,15 +5,15 @@
 ```yml
 # serverless.yml
 
-component: express-tencent@dev # (required) name of the component. In that case, it's express.
-name: express-api # (required) name of your express component instance.
-org: test # (optional) serverless dashboard org. default is the first org you created during signup.
-app: expressApp # (optional) serverless dashboard app. default is the same as the name property.
+component: nextjs # (required) name of the component. In that case, it's express.
+name: nextjsDemo # (required) name of your express component instance.
+org: orgDemo # (optional) serverless dashboard org. default is the first org you created during signup.
+app: appDemo # (optional) serverless dashboard app. default is the same as the name property.
 stage: dev # (optional) serverless dashboard stage. default is dev.
 
 inputs:
   region: ap-guangzhou
-  functionName: express-api
+  functionName: nextjsDemo
   serviceName: mytest
   runtime: Nodejs8.9
   serviceId: service-np1uloxw

@@ -4,10 +4,7 @@
 
 # 腾讯云 Next.js Serverless Component
 
-[![npm](https://img.shields.io/npm/v/%40serverless%2Ftencent-nextjs)](http://www.npmtrends.com/%40serverless%2Ftencent-nextjs)
-[![NPM downloads](http://img.shields.io/npm/dm/%40serverless%2Ftencent-nextjs.svg?style=flat-square)](http://www.npmtrends.com/%40serverless%2Ftencent-nextjs)
-
-简体中文 | [English](https://github.com/serverless-components/tencent-nextjs/blob/master/README.en.md)
+简体中文 | [English](https://github.com/serverless-components/tencent-nextjs/blob/v2/README.en.md)
 
 ## 简介
 
@@ -29,14 +26,6 @@
 $ npm init next-app
 ```
 
-添加 `express` 依赖：
-
-```
-$ npm i express --save
-```
-
-> 注释：这里通过 express 服务来代理 next.js 的服务。
-
 ### 1. 安装
 
 通过 npm 全局安装 [serverless cli](https://github.com/serverless/serverless)
@@ -55,27 +44,27 @@ $ touch serverless.yml
 
 ```yml
 # serverless.yml
-NextjsFunc:
-  component: '@serverless/tencent-nextjs'
-  inputs:
-    functionName: nextjs-function
-    region: ap-guangzhou
-    runtime: Nodejs8.9
-    code: ./
-    functionConf:
-      timeout: 30
-      memorySize: 128
-    environment:
-      variables:
-        RUN_ENV: test
-    apigatewayConf:
-      protocols:
-        - http
-        - https
-      environment: release
+component: nextjs
+name: nextjsDemo
+org: orgDemo
+app: appDemo
+stage: dev
+
+inputs:
+  src: ./src
+  functionName: nextjsDemo
+  region: ap-guangzhou
+  runtime: Nodejs10.15
+  exclude:
+    - .env
+  apigatewayConf:
+    protocols:
+      - http
+      - https
+    environment: release
 ```
 
-- [更多配置](https://github.com/serverless-components/tencent-nextjs/tree/master/docs/configure.md)
+- [更多配置](https://github.com/serverless-components/tencent-nextjs/tree/v2/docs/configure.md)
 
 ### 3. 部署
 
@@ -89,54 +78,8 @@ $ npm run build
 
 如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
 
-通过 `sls` 命令进行部署，并可以添加 `--debug` 参数查看部署过程中的信息
-
 ```bash
-$ sls --debug
-
-  DEBUG ─ Resolving the template's static variables.
-  DEBUG ─ Collecting components from the template.
-  DEBUG ─ Downloading any NPM components found in the template.
-  DEBUG ─ Analyzing the template's components dependencies.
-  DEBUG ─ Creating the template's components graph.
-  DEBUG ─ Syncing template state.
-  DEBUG ─ Executing the template's components graph.
-  DEBUG ─ Generating serverless handler...
-  DEBUG ─ Generated serverless handler successfully.
-  DEBUG ─ Compressing function nextjs-function file to /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip.
-  DEBUG ─ Compressed function nextjs-function file successful
-  DEBUG ─ Uploading service package to cos[sls-cloudfunction-ap-guangzhou-code]. sls-cloudfunction-default-nextjs-function-1584351212.zip
-  DEBUG ─ Uploaded package successful /Users/yugasun/Desktop/Develop/serverless/tencent-nextjs/example/.serverless/nextjs-function.zip
-  DEBUG ─ Creating function nextjs-function
-  nextjs-function [████████████████████████████████████████] 100% | ETA: 0s | Speed: 1039.75k/s
-  DEBUG ─ Created function nextjs-function successful
-  DEBUG ─ Setting tags for function nextjs-function
-  DEBUG ─ Creating trigger for function nextjs-function
-  DEBUG ─ Deployed function nextjs-function successful
-  DEBUG ─ Starting API-Gateway deployment with name ap-guangzhou-apigateway in the ap-guangzhou region
-  DEBUG ─ Service with ID service-8knyukzy created.
-  DEBUG ─ API with id api-eimhu8pa created.
-  DEBUG ─ Deploying service with id service-8knyukzy.
-  DEBUG ─ Deployment successful for the api named ap-guangzhou-apigateway in the ap-guangzhou region.
-
-  NextjsFunc:
-    functionName:        nextjs-function
-    functionOutputs:
-      ap-guangzhou:
-        Name:        nextjs-function
-        Runtime:     Nodejs8.9
-        Handler:     serverless-handler.handler
-        MemorySize:  128
-        Timeout:     30
-        Region:      ap-guangzhou
-        Namespace:   default
-        Description: This is a template function
-    region:              ap-guangzhou
-    apiGatewayServiceId: service-8knyukzy
-    url:                 https://service-8knyukzy-1251556596.gz.apigw.tencentcs.com/release/
-    cns:                 (empty array)
-
-  33s › NextjsFunc › done
+$ sls deploy
 ```
 
 > 注意: `sls` 是 `serverless` 命令的简写。
@@ -146,14 +89,7 @@ $ sls --debug
 通过以下命令移除部署的 API 网关
 
 ```bash
-$ sls remove --debug
-
-  DEBUG ─ Flushing template state and removing all components.
-  DEBUG ─ Removed function nextjs-function successful
-  DEBUG ─ Removing any previously deployed API. api-eimhu8pa
-  DEBUG ─ Removing any previously deployed service. service-8knyukzy
-
-  7s › NextjsFunc › done
+$ sls remove
 ```
 
 ### 账号配置（可选）
