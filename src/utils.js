@@ -1,10 +1,11 @@
 const path = require('path')
-const { copySync, existsSync } = require('fs-extra')
+const { copySync } = require('fs-extra')
 const Cam = require('tencent-cloud-sdk').cam
 const { Domain } = require('tencent-component-toolkit')
 const ensureObject = require('type/object/ensure')
 const ensureIterable = require('type/iterable/ensure')
 const ensureString = require('type/string/ensure')
+const download = require('download')
 const CONFIGS = require('./config')
 
 /*
@@ -32,7 +33,21 @@ const packageCode = async (instance, inputs) => {
 
   // unzip source zip file
   console.log(`Unzipping ${inputs.code.src || 'files'}...`)
-  const sourceDirectory = await instance.unzip(inputs.code.src)
+  let sourceDirectory
+  if (!inputs.code.src) {
+    // add default nextjs template
+    const downloadPath = `/tmp/${generateId()}`
+    const filename = 'template'
+
+    console.log(`Installing Default Next.js App...`)
+    await download(CONFIGS.templateUrl, downloadPath, {
+      filename: `${filename}.zip`
+    })
+    const tempPath = await instance.unzip(`${downloadPath}/${filename}.zip`)
+    sourceDirectory = `${tempPath}/src`
+  } else {
+    sourceDirectory = await instance.unzip(inputs.code.src)
+  }
   console.log(`Files unzipped into ${sourceDirectory}...`)
 
   // add shim to the source directory
@@ -42,18 +57,7 @@ const packageCode = async (instance, inputs) => {
   // add sdk to the source directory, add original handler
   console.log(`Installing Serverless Framework SDK...`)
   instance.state.handler = await instance.addSDK(sourceDirectory, '_nextjs/handler.handler')
-
-  // if (!inputs.code.src) {
-  //   // add default nextjs app
-  //   console.log(`Installing Default Next.js App...`)
-  //   copySync(path.join(__dirname, '_src'), path.join(sourceDirectory))
-  // }
   // zip the source directory with the shim and the sdk
-
-  // if entry sls.js not exist, use default in _nextjs/sls.js
-  if (!existsSync(path.join(sourceDirectory, 'sls.js'))) {
-    copySync(path.join(__dirname, '_nextjs/sls.js'), path.join(sourceDirectory, 'sls.js'))
-  }
 
   console.log(`Zipping files...`)
   const zipPath = await instance.zip(sourceDirectory)

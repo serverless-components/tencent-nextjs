@@ -1,4 +1,4 @@
-component: nextjs@0.0.0-dev
+component: nextjs
 name: nextjsDemo
 org: orgDemo
 app: appDemo

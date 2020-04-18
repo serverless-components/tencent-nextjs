@@ -4,7 +4,7 @@ const { createServer, proxy } = require('tencent-serverless-http')
 const createApp = require('./sls')
 
 module.exports.handler = async (event, context) => {
-  const userSls = path.join(__dirname, 'sls.js')
+  const userSls = path.join(__dirname, '..', 'sls.js')
   let app = await createApp()
   if (fs.existsSync(userSls)) {
     // eslint-disable-next-line
