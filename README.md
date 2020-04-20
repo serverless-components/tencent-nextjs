@@ -8,9 +8,8 @@
 
 ## 简介
 
-<br/>
 **腾讯云[Next.js](https://github.com/zeit/next.js) 组件** - 通过使用[**Tencent Serverless Framework**](https://github.com/serverless/components/tree/cloud) , 基于云上 Serverless 服务（如API网关、云函数等），实现“0”配置，便捷开发，极速部署采用Next.js框架的网页应用，Next.js组件支持丰富的配置扩展，提供了目前便捷实用，开发成本低的网页应用项目的开发/托管能力。
-<br/>
+
 
 特性介绍：
 
