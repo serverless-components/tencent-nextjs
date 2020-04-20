@@ -52,11 +52,11 @@ const packageCode = async (instance, inputs) => {
 
   // add shim to the source directory
   console.log(`Installing Next.js + SCF handler...`)
-  copySync(path.join(__dirname, '_nextjs'), path.join(sourceDirectory, '_nextjs'))
+  copySync(path.join(__dirname, '_shims'), path.join(sourceDirectory, '_shims'))
 
   // add sdk to the source directory, add original handler
   console.log(`Installing Serverless Framework SDK...`)
-  instance.state.handler = await instance.addSDK(sourceDirectory, '_nextjs/handler.handler')
+  instance.state.handler = await instance.addSDK(sourceDirectory, '_shims/handler.handler')
   // zip the source directory with the shim and the sdk
 
   console.log(`Zipping files...`)

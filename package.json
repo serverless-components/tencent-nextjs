@@ -1,6 +1,6 @@
 {
   "name": "@serverless/nextjs",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "main": "src/serverless.js",
   "publishConfig": {
     "access": "public"
