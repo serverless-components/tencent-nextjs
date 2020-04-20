@@ -9,7 +9,7 @@
 ## 简介
 
 <br/>
-**腾讯云Next.js组件** ⎯⎯⎯ 通过使用[Tencent Serverless Framework](https://github.com/serverless/components/tree/cloud)，基于云上 Serverless 服务（如API网关、云函数等），实现“0”配置，便捷开发，极速部署采用 [Next.js 框架](https://github.com/zeit/next.js)的网页应用，Nest.js组件支持丰富的配置扩展，提供了目前便捷实用，开发成本低的网页应用项目的开发/托管能力。
+**腾讯云Next.js组件** ⎯⎯⎯ 通过使用 [Tencent Serverless Framework](https://github.com/serverless/components/tree/cloud)，基于云上 Serverless 服务（如API网关、云函数等），实现“0”配置，便捷开发，极速部署采用 [Next.js框架](https://github.com/zeit/next.js) 的网页应用，Nest.js组件支持丰富的配置扩展，提供了目前便捷实用，开发成本低的网页应用项目的开发/托管能力。
 <br/>
 
 特性介绍：
@@ -33,7 +33,7 @@
 
 更多资源：
 
-- [**账号配置**](#账号配置（可选）)
+- [**账号配置**](#账号配置)
 - [**架构说明**](#架构说明)
 - [**更多组件**](#更多组件)
 - [**FAQ**](#FAQ)
@@ -133,7 +133,7 @@ $ sls remove
 ```
 和部署类似，支持通过 `sls remove --debug` 命令查看移除过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
 
-### 账号配置（可选）
+### 账号配置
 
 当前默认支持 CLI 扫描二维码登录，如您希望配置持久的环境变量/秘钥信息，也可以本地创建 `.env` 文件
 
@@ -152,6 +152,7 @@ $ touch .env # 腾讯云的配置信息
 TENCENT_SECRET_ID=123
 TENCENT_SECRET_KEY=123
 ```
+
 ### 架构说明
 
 Next.js 组件将在腾讯云账户中使用到如下 Serverless 服务：
