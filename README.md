@@ -23,7 +23,8 @@
 #### 初始化 Next.js 项目
 
 ```bash
-$ npm init next-app
+$ mkdir serverless-next && cd serverless-next
+$ npm init next-app src
 ```
 
 ### 1. 安装

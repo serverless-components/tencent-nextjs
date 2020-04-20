@@ -24,16 +24,9 @@
 #### Init Next.js Project
 
 ```bash
-$ npm init next-app
+$ mkdir serverless-next && cd serverless-next
+$ npm init next-app src
 ```
-
-Add `express` dependency：
-
-```
-$ npm i express --save
-```
-
-> Notice: using express for server of next.js.
 
 ### 1. Install
 
