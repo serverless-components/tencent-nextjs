@@ -1,15 +1,9 @@
 {
   "name": "@serverless/nextjs",
   "main": "./handler.js",
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --fix --cache"
-  },
-  "author": "Serverless, Inc.",
-  "license": "Apache",
+  "scripts": {},
+  "author": "Tencent Cloud, Inc.",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
     "tencent-serverless-http": "^1.0.7"

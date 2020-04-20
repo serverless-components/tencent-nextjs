@@ -1,9 +1,6 @@
 {
   "name": "@serverless/nextjs",
   "main": "./serverless.js",
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {},
   "author": "Tencent Cloud, Inc.",
   "license": "MIT",
