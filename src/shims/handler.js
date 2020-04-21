@@ -11,6 +11,10 @@ module.exports.handler = async (event, context) => {
     console.log('Using user custom sls.js')
     app = await require(userSls)()
   }
+
+  context.callbackWaitsForEmptyEventLoop =
+    app.callbackWaitsForEmptyEventLoop === true ? true : false
+
   const server = createServer(app, null, app.binaryTypes || [])
   return proxy(server, event, context, 'PROMISE').promise
 }
