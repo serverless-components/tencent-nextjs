@@ -23,23 +23,23 @@ const generateId = () =>
     .toString(36)
     .substring(6)
 /*
- * Packages nextjs app and injects shims and sdk
+ * Packages framework app and injects shims and sdk
  *
  * @param ${instance} instance - the component instance
  * @param ${object} config - the component config
  */
 const packageCode = async (instance, inputs) => {
-  console.log(`Packaging Next.js application...`)
+  console.log(`Packaging ${CONFIGS.frameworkFullname} application...`)
 
   // unzip source zip file
   console.log(`Unzipping ${inputs.code.src || 'files'}...`)
   let sourceDirectory
   if (!inputs.code.src) {
-    // add default nextjs template
+    // add default template
     const downloadPath = `/tmp/${generateId()}`
     const filename = 'template'
 
-    console.log(`Installing Default Next.js App...`)
+    console.log(`Installing Default ${CONFIGS.frameworkFullname} App...`)
     await download(CONFIGS.templateUrl, downloadPath, {
       filename: `${filename}.zip`
     })
@@ -51,7 +51,7 @@ const packageCode = async (instance, inputs) => {
   console.log(`Files unzipped into ${sourceDirectory}...`)
 
   // add shim to the source directory
-  console.log(`Installing Next.js + SCF handler...`)
+  console.log(`Installing ${CONFIGS.frameworkFullname} + SCF handler...`)
   copySync(path.join(__dirname, '_shims'), path.join(sourceDirectory, '_shims'))
 
   // add sdk to the source directory, add original handler

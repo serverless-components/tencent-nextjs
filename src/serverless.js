@@ -211,7 +211,7 @@ class CloudComopnent extends Component {
   }
 
   async remove() {
-    console.log(`Removing Express App...`)
+    console.log(`Removing ${CONFIGS.frameworkFullname} App...`)
 
     const { state } = this
     const { regionList = [] } = state
