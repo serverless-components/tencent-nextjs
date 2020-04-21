@@ -3,7 +3,23 @@ const { MultiApigw, Scf, Apigw, Cos, Cns } = require('tencent-component-toolkit'
 const { packageCode, getDefaultProtocol, deleteRecord, prepareInputs } = require('./utils')
 const CONFIGS = require('./config')
 
-class CloudComopnent extends Component {
+class ServerlessComopnent extends Component {
+  getCredentials() {
+    const { tmpSecrets } = this.credentials.tencent
+
+    if (!tmpSecrets || !tmpSecrets.TmpSecretId) {
+      throw new Error(
+        'Cannot get secretId/Key, your account could be sub-account or does not have access, please check if SLS_QcsRole role exists in your account, and visit https://console.cloud.tencent.com/cam to bind this role to your account.'
+      )
+    }
+
+    return {
+      SecretId: tmpSecrets.TmpSecretId,
+      SecretKey: tmpSecrets.TmpSecretKey,
+      Token: tmpSecrets.Token
+    }
+  }
+
   async uploadCodeToCos(credentials, inputs, region, filePath) {
     const { appId } = this.credentials.tencent.tmpSecrets
     // 创建cos对象
@@ -162,13 +178,8 @@ class CloudComopnent extends Component {
   async deploy(inputs) {
     console.log(`Deploying Express App...`)
 
-    // 获取腾讯云密钥信息
-    const { tmpSecrets } = this.credentials.tencent
-    const credentials = {
-      SecretId: tmpSecrets.TmpSecretId,
-      SecretKey: tmpSecrets.TmpSecretKey,
-      Token: tmpSecrets.Token
-    }
+    // get credentials
+    const credentials = this.getCredentials()
 
     // 对Inputs内容进行标准化
     const { regionList, functionConf, apigatewayConf, cnsConf } = await prepareInputs(
@@ -177,7 +188,7 @@ class CloudComopnent extends Component {
       inputs
     )
 
-    // 部署函数 + API网关
+    // deploy scf + apigw
     const outputs = {}
     if (!functionConf.code.src) {
       outputs.templateUrl = CONFIGS.templateUrl
@@ -198,7 +209,7 @@ class CloudComopnent extends Component {
       outputs['scf'] = functionOutputs
     }
 
-    // 云解析遇到等API网关部署完成才可以继续部署
+    // add cns for apigw
     if (cnsConf.length > 0) {
       outputs['cns'] = await this.deployCns(credentials, cnsConf, regionList, apigwOutputs)
     }
@@ -215,12 +226,7 @@ class CloudComopnent extends Component {
 
     const { state } = this
     const { regionList = [] } = state
-    const { tmpSecrets } = this.credentials.tencent
-    const credentials = {
-      SecretId: tmpSecrets.TmpSecretId,
-      SecretKey: tmpSecrets.TmpSecretKey,
-      Token: tmpSecrets.Token
-    }
+    const credentials = this.getCredentials()
     const removeHandlers = []
     for (let i = 0; i < regionList.length; i++) {
       const curRegion = regionList[i]
@@ -256,4 +262,4 @@ class CloudComopnent extends Component {
   }
 }
 
-module.exports = CloudComopnent
+module.exports = ServerlessComopnent
