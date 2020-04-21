@@ -13,7 +13,7 @@ module.exports.handler = async (event, context) => {
   }
 
   context.callbackWaitsForEmptyEventLoop =
-    app.callbackWaitsForEmptyEventLoop === false ? false : true
+    app.callbackWaitsForEmptyEventLoop === true ? true : false
 
   const server = createServer(app, null, app.binaryTypes || [])
   return proxy(server, event, context, 'PROMISE').promise
