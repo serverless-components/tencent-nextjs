@@ -176,7 +176,7 @@ class ServerlessComopnent extends Component {
   }
 
   async deploy(inputs) {
-    console.log(`Deploying Express App...`)
+    console.log(`Deploying ${CONFIGS.frameworkFullname} App...`)
 
     // get credentials
     const credentials = this.getCredentials()

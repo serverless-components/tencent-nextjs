@@ -5,15 +5,15 @@
 ```yml
 # serverless.yml
 
-component: express # (required) name of the component. In that case, it's express.
-name: expressDemo # (required) name of your express component instance.
+component: nextjs # (required) name of the component. In that case, it's nextjs.
+name: nextjsDemo # (required) name of your nextjs component instance.
 org: orgDemo # (optional) serverless dashboard org. default is the first org you created during signup.
 app: appDemo # (optional) serverless dashboard app. default is the same as the name property.
 stage: dev # (optional) serverless dashboard stage. default is dev.
 
 inputs:
   region: ap-guangzhou
-  functionName: expressDemo
+  functionName: nextjsDemo
   serviceName: mytest
   runtime: Nodejs10.15
   serviceId: service-np1uloxw
@@ -24,7 +24,7 @@ inputs:
   #     - .env
   #     - node_modules
   layers:
-    - name: expressLayer
+    - name: nextjsLayer
       version: 1
   functionConf:
     timeout: 10
