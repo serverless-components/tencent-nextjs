@@ -101,6 +101,9 @@ class ServerlessComopnent extends Component {
   }
 
   async deployApigateway(credentials, inputs, regionList) {
+    if (inputs.isDisabled) {
+      return {}
+    }
     const apigw = new MultiApigw(credentials, regionList)
     inputs.oldState = {
       apiList: (this.state[regionList[0]] && this.state[regionList[0]].apiList) || []
@@ -178,7 +181,6 @@ class ServerlessComopnent extends Component {
   async deploy(inputs) {
     console.log(`Deploying ${CONFIGS.frameworkFullname} App...`)
 
-    // get credentials
     const credentials = this.getCredentials()
 
     // 对Inputs内容进行标准化
@@ -188,15 +190,20 @@ class ServerlessComopnent extends Component {
       inputs
     )
 
-    // deploy scf + apigw
+    // 部署函数 + API网关
     const outputs = {}
     if (!functionConf.code.src) {
       outputs.templateUrl = CONFIGS.templateUrl
     }
-    const [apigwOutputs, functionOutputs] = await Promise.all([
-      this.deployApigateway(credentials, apigatewayConf, regionList, outputs),
-      this.deployFunction(credentials, functionConf, regionList, outputs)
-    ])
+
+    const deployTasks = [this.deployFunction(credentials, functionConf, regionList, outputs)]
+    // support apigatewayConf.isDisabled
+    if (apigatewayConf.isDisabled !== true) {
+      deployTasks.push(this.deployApigateway(credentials, apigatewayConf, regionList, outputs))
+    } else {
+      this.state.apigwDisabled = true
+    }
+    const [functionOutputs, apigwOutputs = {}] = await Promise.all(deployTasks)
 
     // optimize outputs for one region
     if (regionList.length === 1) {
@@ -209,8 +216,8 @@ class ServerlessComopnent extends Component {
       outputs['scf'] = functionOutputs
     }
 
-    // add cns for apigw
-    if (cnsConf.length > 0) {
+    // cns depends on apigw, so if disabled apigw, just ignore it.
+    if (cnsConf.length > 0 && apigatewayConf.isDisabled !== true) {
       outputs['cns'] = await this.deployCns(credentials, cnsConf, regionList, apigwOutputs)
     }
 
@@ -226,7 +233,9 @@ class ServerlessComopnent extends Component {
 
     const { state } = this
     const { regionList = [] } = state
+
     const credentials = this.getCredentials()
+
     const removeHandlers = []
     for (let i = 0; i < regionList.length; i++) {
       const curRegion = regionList[i]
@@ -238,13 +247,16 @@ class ServerlessComopnent extends Component {
           functionName: curState.functionName,
           namespace: curState.namespace
         })
-        await apigw.remove({
-          created: curState.created,
-          environment: curState.environment,
-          serviceId: curState.serviceId,
-          apiList: curState.apiList,
-          customDomains: curState.customDomains
-        })
+        // if disable apigw, no need to remove
+        if (state.apigwDisabled !== true) {
+          await apigw.remove({
+            created: curState.created,
+            environment: curState.environment,
+            serviceId: curState.serviceId,
+            apiList: curState.apiList,
+            customDomains: curState.customDomains
+          })
+        }
       }
       removeHandlers.push(handler())
     }
