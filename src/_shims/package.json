@@ -6,6 +6,6 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
-    "tencent-serverless-http": "^1.0.7"
+    "tencent-serverless-http": "^1.2.0"
   }
 }
