@@ -105,6 +105,41 @@ $ sls deploy
 $ sls remove
 ```
 
-### More Components
+## More Components
 
 Checkout the [Serverless Components](https://github.com/serverless/components) repo for more information.
+
+## Migration for custom express server
+
+If you had used `express` for you server, you should create entry file `sls.js`, please change depand on your server entry file, below is a template:
+
+```js
+const express = require('express')
+const next = require('next')
+
+const app = next({ dev: false })
+const handle = app.getRequestHandler()
+
+async function createServer() {
+  await app.prepare()
+  const server = express()
+
+  server.all('*', (req, res) => {
+    return handle(req, res)
+  })
+
+  // define binary type for response
+  // if includes, will return base64 encoded, very useful for images
+  server.binaryTypes = ['*/*']
+
+  return server
+}
+
+module.exports = createServer
+```
+
+## License
+
+MIT License
+
+Copyright (c) 2020 Tencent Cloud Inc.

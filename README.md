@@ -8,8 +8,7 @@
 
 ## 简介
 
-**腾讯云[Next.js](https://github.com/zeit/next.js) 组件** - 通过使用[**Tencent Serverless Framework**](https://github.com/serverless/components/tree/cloud) , 基于云上 Serverless 服务（如API网关、云函数等），实现“0”配置，便捷开发，极速部署采用Next.js框架的网页应用，Next.js组件支持丰富的配置扩展，提供了目前便捷实用，开发成本低的网页应用项目的开发/托管能力。
-
+**腾讯云[Next.js](https://github.com/zeit/next.js) 组件** - 通过使用[**Tencent Serverless Framework**](https://github.com/serverless/components/tree/cloud) , 基于云上 Serverless 服务（如 API 网关、云函数等），实现“0”配置，便捷开发，极速部署采用 Next.js 框架的网页应用，Next.js 组件支持丰富的配置扩展，提供了目前便捷实用，开发成本低的网页应用项目的开发/托管能力。
 
 特性介绍：
 
@@ -24,11 +23,11 @@
 
 0. [**准备**](#0-准备)
 1. [**安装**](#1-安装)
-2. [**配置**](#2-配置)
-3. [**部署**](#3-部署)
-4. [**开发调试**](#4-开发调试)
-5. [**查看状态**](#5-查看部署状态)
-6. [**移除**](#6-移除)
+1. [**配置**](#2-配置)
+1. [**部署**](#3-部署)
+1. [**开发调试**](#4-开发调试)
+1. [**查看状态**](#5-查看部署状态)
+1. [**移除**](#6-移除)
 
 更多资源：
 
@@ -41,7 +40,8 @@
 
 #### 初始化 Next.js 项目
 
-首先，在本地创建一个Next.js项目并初始化：
+首先，在本地创建一个 Next.js 项目并初始化：
+
 ```bash
 $ mkdir serverless-next && cd serverless-next
 $ npm init next-app src
@@ -98,6 +98,7 @@ $ npm run build
 #### 3.2 部署到云端
 
 在 serverless.yml 文件下的目录中运行以下指令进行部署：
+
 ```bash
 $ sls deploy
 ```
@@ -105,7 +106,7 @@ $ sls deploy
 部署时需要进行身份验证，如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
 
 > 注意: 如果希望查看更多部署过程的信息，可以通过`sls deploy --debug` 命令查看部署过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
-`sls` 是 `serverless` 命令的简写。
+> `sls` 是 `serverless` 命令的简写。
 
 ### 4. 开发调试
 
@@ -130,6 +131,7 @@ $ serverless info
 ```bash
 $ sls remove
 ```
+
 和部署类似，支持通过 `sls remove --debug` 命令查看移除过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
 
 ### 账号配置
@@ -152,7 +154,7 @@ TENCENT_SECRET_ID=123
 TENCENT_SECRET_KEY=123
 ```
 
-### 架构说明
+## 架构说明
 
 Next.js 组件将在腾讯云账户中使用到如下 Serverless 服务：
 
@@ -162,10 +164,41 @@ Next.js 组件将在腾讯云账户中使用到如下 Serverless 服务：
 - [x] **COS 对象存储** - 为确保上传速度和质量，云函数压缩并上传代码时，会默认将代码包存储在特定命名的 COS 桶中。
 - [x] **SSL 证书服务** - 如果你在 yaml 文件中配置了 `domain` 字段，需要做自定义域名绑定并开启 HTTPS 时，也会用到证书管理服务和域名服务。Serverless Framework 会根据已经备案的域名自动申请并配置 SSL 证书。
 
-### 更多组件
+## 更多组件
 
 可以在 [Serverless Components](https://github.com/serverless/components) repo 中查询更多组件的信息。
 
-### FAQ
+## 项目迁移 - 自定义 express 服务
 
-1. [为什么不需要入口文件了？](https://github.com/serverless-components/tencent-nextjs/issues/1)
+如果你的 Next.js 项目本身运行就是基于 `express` 自定义服务的，那么你需要在项目中自定义入口文件 `sls.js`，需要参考你的服务启动文件进行修改，以下是一个模板文件：
+
+```js
+const express = require('express')
+const next = require('next')
+
+const app = next({ dev: false })
+const handle = app.getRequestHandler()
+
+async function createServer() {
+  await app.prepare()
+  const server = express()
+
+  server.all('*', (req, res) => {
+    return handle(req, res)
+  })
+
+  // define binary type for response
+  // if includes, will return base64 encoded, very useful for images
+  server.binaryTypes = ['*/*']
+
+  return server
+}
+
+module.exports = createServer
+```
+
+## License
+
+MIT License
+
+Copyright (c) 2020 Tencent Cloud Inc.
