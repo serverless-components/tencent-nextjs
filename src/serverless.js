@@ -1,5 +1,5 @@
 const { Component } = require('@serverless/core')
-const { MultiApigw, Scf, Apigw, Cos, Cns } = require('tencent-component-toolkit')
+const { MultiApigw, Scf, Apigw, Cos, Cns, Cam, Metrics } = require('tencent-component-toolkit')
 const { packageCode, getDefaultProtocol, deleteRecord, prepareInputs } = require('./utils')
 const CONFIGS = require('./config')
 
@@ -66,6 +66,18 @@ class ServerlessComopnent extends Component {
     let packageDir
     if (!inputs.code.bucket || !inputs.code.object) {
       packageDir = await packageCode(this, inputs)
+    }
+
+    if (!inputs.role) {
+      try {
+        const camClient = new Cam(credentials)
+        const roleExist = await camClient.CheckSCFExcuteRole()
+        if (roleExist) {
+          inputs.role = 'QCS_SCFExcuteRole'
+        }
+      } catch (e) {
+        // no op
+      }
     }
 
     // 上传代码到COS
@@ -273,6 +285,36 @@ class ServerlessComopnent extends Component {
     }
 
     this.state = {}
+  }
+
+  async metrics(inputs = {}) {
+    console.log(`Get ${CONFIGS.frameworkFullname} Metrics Datas...`)
+    if (!inputs.rangeStart || !inputs.rangeEnd) {
+      throw new Error('rangeStart and rangeEnd are require inputs')
+    }
+    const { region } = this.state
+    if (!region) {
+      throw new Error('No region property in state')
+    }
+    const { functionName, namespace, functionVersion } = this.state[region] || {}
+    if (functionName) {
+      const options = {
+        funcName: functionName,
+        namespace: namespace,
+        version: functionVersion,
+        region,
+        timezone: inputs.tz
+      }
+      const credentials = this.getCredentials()
+      const mertics = new Metrics(credentials, options)
+      const metricResults = await mertics.getDatas(
+        inputs.rangeStart,
+        inputs.rangeEnd,
+        Metrics.Type.Base
+      )
+      return metricResults
+    }
+    throw new Error('function name not define')
   }
 }
 
