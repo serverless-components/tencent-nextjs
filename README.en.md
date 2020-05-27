@@ -142,4 +142,4 @@ module.exports = createServer
 
 MIT License
 
-Copyright (c) 2020 Tencent Cloud Inc.
+Copyright (c) 2020 Tencent Cloud, Inc.
