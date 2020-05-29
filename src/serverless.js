@@ -1,6 +1,6 @@
 const { Component } = require('@serverless/core')
-const { MultiApigw, Scf, Apigw, Cos, Cns, Cam, Metrics } = require('tencent-component-toolkit')
-const { packageCode, getDefaultProtocol, deleteRecord, prepareInputs } = require('./utils')
+const { MultiApigw, Scf, Apigw, Cns, Cam, Metrics } = require('tencent-component-toolkit')
+const { uploadCodeToCos, getDefaultProtocol, deleteRecord, prepareInputs } = require('./utils')
 const CONFIGS = require('./config')
 
 class ServerlessComopnent extends Component {
@@ -20,54 +20,11 @@ class ServerlessComopnent extends Component {
     }
   }
 
-  async uploadCodeToCos(credentials, inputs, region, filePath) {
-    const { appId } = this.credentials.tencent.tmpSecrets
-    // 创建cos对象
-    const cos = new Cos(credentials, region)
-    // 创建存储桶 + 设置生命周期
-    if (!inputs.code.bucket) {
-      inputs.code.bucket = `sls-cloudfunction-${region}-code`
-      await cos.deploy({
-        bucket: inputs.code.bucket + '-' + appId,
-        force: true,
-        lifecycle: [
-          {
-            status: 'Enabled',
-            id: 'deleteObject',
-            filter: '',
-            expiration: { days: '10' },
-            abortIncompleteMultipartUpload: { daysAfterInitiation: '10' }
-          }
-        ]
-      })
-    }
-
-    // 上传代码
-    if (!inputs.code.object) {
-      const object = `${inputs.name}-${Math.floor(Date.now() / 1000)}.zip`
-      inputs.code.object = object
-      await cos.upload({
-        bucket: inputs.code.bucket + '-' + appId,
-        file: filePath,
-        key: inputs.code.object
-      })
-    }
-    this.state.bucket = inputs.code.bucket
-    this.state.object = inputs.code.object
-
-    return {
-      bucket: inputs.code.bucket,
-      object: inputs.code.object
-    }
+  getAppId() {
+    return this.credentials.tencent.tmpSecrets.appId
   }
 
   async deployFunction(credentials, inputs, regionList) {
-    // if set bucket and object not pack code
-    let packageDir
-    if (!inputs.code.bucket || !inputs.code.object) {
-      packageDir = await packageCode(this, inputs)
-    }
-
     if (!inputs.role) {
       try {
         const camClient = new Cam(credentials)
@@ -80,14 +37,13 @@ class ServerlessComopnent extends Component {
       }
     }
 
-    // 上传代码到COS
     const uploadCodeHandler = []
     const outputs = {}
+    const appId = this.getAppId()
 
-    for (let eveRegionIndex = 0; eveRegionIndex < regionList.length; eveRegionIndex++) {
-      const curRegion = regionList[eveRegionIndex]
+    regionList.forEach((curRegion) => {
       const funcDeployer = async () => {
-        const code = await this.uploadCodeToCos(credentials, inputs, curRegion, packageDir)
+        const code = await uploadCodeToCos(this, appId, credentials, inputs, curRegion)
         const scf = new Scf(credentials, curRegion)
         const tempInputs = {
           ...inputs,
@@ -106,7 +62,7 @@ class ServerlessComopnent extends Component {
         }
       }
       uploadCodeHandler.push(funcDeployer())
-    }
+    })
     await Promise.all(uploadCodeHandler)
     this.save()
     return outputs
@@ -310,7 +266,7 @@ class ServerlessComopnent extends Component {
       const metricResults = await mertics.getDatas(
         inputs.rangeStart,
         inputs.rangeEnd,
-        Metrics.Type.Base
+        Metrics.Type.All
       )
       return metricResults
     }
