@@ -1,5 +1,5 @@
 name: nextjs
-version: dev
+version: 0.0.6
 author: Tencent Cloud Inc.
 org: Tencent Cloud Inc.
 description: Deploys a serverless Next.js application onto Tencent SCF and Tencent APIGateway.

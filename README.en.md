@@ -120,11 +120,19 @@ const next = require('next')
 const app = next({ dev: false })
 const handle = app.getRequestHandler()
 
+// not report route for custom monitor
+const noReportRoutes = ['/_next', '/static']
+
 async function createServer() {
   await app.prepare()
   const server = express()
 
   server.all('*', (req, res) => {
+    noReportRoutes.forEach((route) => {
+      if (req.path.indexOf(route) === 0) {
+        req.__SLS_NO_REPORT__ = true
+      }
+    })
     return handle(req, res)
   })
 
@@ -137,6 +145,20 @@ async function createServer() {
 
 module.exports = createServer
 ```
+
+## Customize Monitor
+
+When deploying Next.js Application, if net config `role` in `serverless.yml`, it will try to bind `QCS_SCFExcuteRole` role for it, and start customize monitor which will help user to collect monitor data.
+For project which have no customize entry file `sls.js`, it will ignore request paths which start with `/_next` and `/static`. If you want to customize `sls.js` file, you can create it by yourself. For no report path, just set `__SLS_NO_REPORT__` to `true` on `req` object, like below:
+
+```js
+server.get('/no-report', (req, res) => {
+  req.__SLS_NO_REPORT__ = true
+  return handle(req, res)
+})
+```
+
+so when user access `GET /no-report` route, it won't report monitor data.
 
 ## License
 

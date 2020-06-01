@@ -4,11 +4,19 @@ const next = require('next')
 const app = next({ dev: false })
 const handle = app.getRequestHandler()
 
+// not report route for custom monitor
+const noReportRoutes = ['/_next', '/static']
+
 async function createServer() {
   await app.prepare()
   const server = express()
 
   server.all('*', (req, res) => {
+    noReportRoutes.forEach((route) => {
+      if (req.path.indexOf(route) === 0) {
+        req.__SLS_NO_REPORT__ = true
+      }
+    })
     return handle(req, res)
   })
 
