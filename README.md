@@ -43,8 +43,10 @@
 首先，在本地创建一个 Next.js 项目并初始化：
 
 ```bash
-$ mkdir serverless-next && cd serverless-next
-$ npm init next-app src
+$ npm init next-app serverless-next
+
+# cd into project folder after init
+$ cd serverless-next
 ```
 
 ### 1. 安装
@@ -72,7 +74,7 @@ app: appDemo # (可选) 该 next.js 应用名称
 stage: dev # (可选) 用于区分环境信息，默认值是 dev
 
 inputs:
-  src: ./src
+  src: ./
   functionName: nextjsDemo
   region: ap-guangzhou
   runtime: Nodejs10.15

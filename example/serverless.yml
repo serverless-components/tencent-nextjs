@@ -6,7 +6,7 @@ name: nextjsDemo
 
 inputs:
   src:
-    src: ./src
+    src: ./
     exclude:
       - .env
   region: ap-guangzhou

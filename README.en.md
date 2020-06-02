@@ -24,8 +24,10 @@
 #### Init Next.js Project
 
 ```bash
-$ mkdir serverless-next && cd serverless-next
-$ npm init next-app src
+$ npm init next-app serverless-next
+
+# cd into project folder after init
+$ cd serverless-next
 ```
 
 ### 1. Install
@@ -66,7 +68,7 @@ app: appDemo
 stage: dev
 
 inputs:
-  src: ./src
+  src: ./
   functionName: nextjsDemo
   region: ap-guangzhou
   runtime: Nodejs10.15
