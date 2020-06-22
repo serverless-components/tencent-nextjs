@@ -149,7 +149,7 @@ class ServerlessComopnent extends Component {
   }
 
   async deploy(inputs) {
-    console.log(`Deploying ${CONFIGS.frameworkFullname} App...`)
+    console.log(`Deploying ${CONFIGS.compFullname} App...`)
 
     const credentials = this.getCredentials()
 
@@ -199,7 +199,7 @@ class ServerlessComopnent extends Component {
   }
 
   async remove() {
-    console.log(`Removing ${CONFIGS.frameworkFullname} App...`)
+    console.log(`Removing ${CONFIGS.compFullname} App...`)
 
     const { state } = this
     const { regionList = [] } = state
@@ -244,7 +244,7 @@ class ServerlessComopnent extends Component {
   }
 
   async metrics(inputs = {}) {
-    console.log(`Get ${CONFIGS.frameworkFullname} Metrics Datas...`)
+    console.log(`Get ${CONFIGS.compFullname} Metrics Datas...`)
     if (!inputs.rangeStart || !inputs.rangeEnd) {
       throw new Error('rangeStart and rangeEnd are require inputs')
     }
