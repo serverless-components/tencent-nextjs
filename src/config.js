@@ -5,10 +5,25 @@ const CONFIGS = {
   compFullname: 'Next.js',
   handler: 'sl_handler.handler',
   runtime: 'Nodejs10.15',
-  exclude: ['.git/**', '.gitignore', '.DS_Store'],
   timeout: 3,
   memorySize: 128,
-  namespace: 'default'
+  namespace: 'default',
+  defaultStatics: [
+    { src: '.next', targetDir: '/_next' },
+    { src: 'public', targetDir: '/' }
+  ],
+  defaultCdnConf: {
+    autoRefresh: true,
+    forceRedirect: {
+      switch: 'on',
+      redirectType: 'https',
+      redirectStatusCode: 301
+    },
+    https: {
+      switch: 'on',
+      http2: 'on'
+    }
+  }
 }
 
 module.exports = CONFIGS

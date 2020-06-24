@@ -5,6 +5,7 @@
   "author": "Tencent Cloud, Inc.",
   "license": "MIT",
   "dependencies": {
+    "adm-zip": "^0.4.14",
     "download": "^8.0.0",
     "tencent-component-toolkit": "^1.11.4",
     "type": "^2.0.0"

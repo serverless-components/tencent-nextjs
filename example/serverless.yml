@@ -1,12 +1,13 @@
 org: orgDemo
 app: appDemo
 stage: dev
-component: nextjs
+component: nextjs@dev
 name: nextjsDemo
 
 inputs:
   src:
-    src: ./
+    dist: ./
+    hook: npm run build
     exclude:
       - .env
   region: ap-guangzhou
@@ -16,3 +17,16 @@ inputs:
       - http
       - https
     environment: release
+  staticCdn:
+    cosConf:
+      bucket: static-bucket
+      # sources:
+      #   - src: .next
+      #     targetDir: /_next
+      #   - src: public
+      #     targetDir: /
+    cdnConf:
+      domain: test.yuga.chat
+      onlyRefresh: true
+      https:
+        certId: 'cWOJJjax'
