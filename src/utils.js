@@ -1,9 +1,11 @@
 const path = require('path')
 const { Domain, Cos } = require('tencent-component-toolkit')
+const { TypeError } = require('tencent-component-toolkit/src/utils/error')
 const ensureObject = require('type/object/ensure')
 const ensureIterable = require('type/iterable/ensure')
 const ensureString = require('type/string/ensure')
 const download = require('download')
+const AdmZip = require('adm-zip')
 const CONFIGS = require('./config')
 
 /*
@@ -41,6 +43,97 @@ const getCodeZipPath = async (instance, inputs) => {
   }
 
   return zipPath
+}
+
+const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
+  const staticCosInputs = []
+  const { cosConf } = inputs
+  const sources = cosConf.sources || CONFIGS.defaultStatics
+  const { bucket } = cosConf
+  const staticPath = `/tmp/${generateId()}`
+  const codeZip = new AdmZip(codeZipPath)
+  const entries = codeZip.getEntries()
+
+  // traverse sources, generate static directory and deploy to cos
+  for (let i = 0; i < sources.length; i++) {
+    const curSource = sources[i]
+    const entryName = `${curSource.src}`
+    let exist = false
+    entries.forEach((et) => {
+      if (et.entryName.indexOf(entryName) === 0) {
+        codeZip.extractEntryTo(et, staticPath, true, true)
+        exist = true
+      }
+    })
+    if (exist) {
+      const cosInputs = {
+        force: true,
+        protocol: cosConf.protocol,
+        bucket: `${bucket}-${appId}`,
+        src: `${staticPath}/${entryName}`,
+        keyPrefix: curSource.targetDir || '/',
+        acl: {
+          permissions: 'public-read',
+          grantRead: '',
+          grantWrite: '',
+          grantFullControl: ''
+        }
+      }
+
+      if (cosConf.acl) {
+        cosInputs.acl = {
+          permissions: cosConf.acl.permissions || 'public-read',
+          grantRead: cosConf.acl.grantRead || '',
+          grantWrite: cosConf.acl.grantWrite || '',
+          grantFullControl: cosConf.acl.grantFullControl || ''
+        }
+      }
+
+      staticCosInputs.push(cosInputs)
+    }
+  }
+  return staticCosInputs
+}
+
+const prepareStaticCdnInputs = async (instance, inputs, origin) => {
+  const { cdnConf } = inputs
+  const cdnInputs = {
+    async: true,
+    area: cdnConf.area || 'mainland',
+    domain: cdnConf.domain,
+    serviceType: 'web',
+    origin: {
+      origins: [origin],
+      originType: 'cos',
+      originPullProtocol: 'https'
+    },
+    autoRefresh: true,
+    ...cdnConf
+  }
+  if (cdnConf.https) {
+    // using these default configs, for making user's config more simple
+    cdnInputs.forceRedirect = cdnConf.https.forceRedirect || CONFIGS.defaultCdnConf.forceRedirect
+    if (!cdnConf.https.certId) {
+      throw new TypeError('PARAMETER_NEXTJS_HTTPS', 'https.certId is required')
+    }
+    cdnInputs.https = {
+      ...CONFIGS.defaultCdnConf.https,
+      ...{
+        http2: cdnConf.https.http2 || 'on',
+        certInfo: {
+          certId: cdnConf.https.certId
+        }
+      }
+    }
+  }
+  if (cdnInputs.autoRefresh) {
+    cdnInputs.refreshCdn = {
+      flushType: cdnConf.refreshType || 'delete',
+      urls: [`http://${cdnInputs.domain}`, `https://${cdnInputs.domain}`]
+    }
+  }
+
+  return cdnInputs
 }
 
 /**
@@ -359,5 +452,7 @@ module.exports = {
   deleteRecord,
   prepareInputs,
   getCodeZipPath,
-  uploadCodeToCos
+  uploadCodeToCos,
+  prepareStaticCosInputs,
+  prepareStaticCdnInputs
 }

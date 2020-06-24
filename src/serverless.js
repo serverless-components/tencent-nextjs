@@ -1,7 +1,14 @@
 const { Component } = require('@serverless/core')
-const { MultiApigw, Scf, Apigw, Cns, Cam, Metrics } = require('tencent-component-toolkit')
+const { MultiApigw, Scf, Apigw, Cns, Cam, Metrics, Cos, Cdn } = require('tencent-component-toolkit')
 const { TypeError } = require('tencent-component-toolkit/src/utils/error')
-const { uploadCodeToCos, getDefaultProtocol, deleteRecord, prepareInputs } = require('./utils')
+const {
+  uploadCodeToCos,
+  getDefaultProtocol,
+  deleteRecord,
+  prepareInputs,
+  prepareStaticCosInputs,
+  prepareStaticCdnInputs
+} = require('./utils')
 const CONFIGS = require('./config')
 
 class ServerlessComopnent extends Component {
@@ -150,6 +157,53 @@ class ServerlessComopnent extends Component {
     return outputs
   }
 
+  // deploy static to cos, and setup cdn
+  async deployStatic(credentials, inputs, region) {
+    const { zipPath } = this.state
+    const appId = this.getAppId()
+    const deployStaticOutpus = {}
+
+    if (zipPath) {
+      // 1. deploy to cos
+      const staticCosInputs = await prepareStaticCosInputs(this, inputs, appId, zipPath)
+
+      const cos = new Cos(credentials, region)
+      const cosOutput = {
+        region
+      }
+      for (let i = 0; i < staticCosInputs.length; i++) {
+        const curInputs = staticCosInputs[i]
+        console.log(`Starting deploy directory ${curInputs.src} to cos bucket ${curInputs.bucket}`)
+        const deployRes = await cos.deploy(curInputs)
+        cosOutput.cosOrigin = `${curInputs.bucket}.cos.${region}.myqcloud.com`
+        cosOutput.bucket = deployRes.bucket
+        console.log(`Deploy directory ${curInputs.src} to cos bucket ${curInputs.bucket} success`)
+      }
+      deployStaticOutpus.cos = cosOutput
+
+      // 2. deploy cdn
+      if (inputs.cdnConf) {
+        const cdn = new Cdn(credentials)
+        const cdnInputs = await prepareStaticCdnInputs(this, inputs, cosOutput.cosOrigin)
+        console.log(`Starting deploy cdn ${cdnInputs.domain}`)
+        const cdnDeployRes = await cdn.deploy(cdnInputs)
+        const protocol = cdnInputs.https ? 'https' : 'http'
+        const cdnOutput = {
+          domain: cdnDeployRes.domain,
+          url: `${protocol}://${cdnDeployRes.domain}`,
+          cname: cdnDeployRes.cname
+        }
+        deployStaticOutpus.cdn = cdnOutput
+
+        console.log(`Deploy cdn ${cdnInputs.domain} success`)
+      }
+
+      return deployStaticOutpus
+    }
+
+    return null
+  }
+
   async deploy(inputs) {
     console.log(`Deploying ${CONFIGS.compFullname} App...`)
 
@@ -193,11 +247,46 @@ class ServerlessComopnent extends Component {
       outputs['cns'] = await this.deployCns(credentials, cnsConf, regionList, apigwOutputs)
     }
 
+    // start deploy static cdn
+    if (inputs.staticCdn) {
+      const staticDeployRes = await this.deployStatic(credentials, inputs.staticCdn, regionList[0])
+      if (staticDeployRes) {
+        this.state.staticCdn = staticDeployRes
+        outputs.staticCdn = staticDeployRes
+      }
+    }
+
     this.state.region = regionList[0]
     this.state.regionList = regionList
-    this.state.lambdaArn = functionConf.name
+
+    this.state.lambdaArn = {
+      functionName: functionConf.name,
+      namespace: functionConf.namespace
+    }
 
     return outputs
+  }
+
+  async removeStatic() {
+    // remove static
+    const { region, staticCdn } = this.state
+    if (staticCdn) {
+      const credentials = this.getCredentials()
+      // 1. remove cos
+      if (staticCdn.cos) {
+        const cos = new Cos(credentials, region)
+        await cos.remove(staticCdn.cos)
+      }
+      // 2. remove cdn
+      if (staticCdn.cdn) {
+        const cdn = new Cdn(credentials)
+        try {
+          await cdn.remove(staticCdn.cdn)
+        } catch (e) {
+          // no op
+        }
+      }
+    }
   }
 
   async remove() {
@@ -235,12 +324,15 @@ class ServerlessComopnent extends Component {
 
     await Promise.all(removeHandlers)
 
-    if (this.state.cns) {
+    if (state.cns) {
       const cns = new Cns(credentials)
       for (let i = 0; i < this.state.cns.length; i++) {
         await cns.remove({ deleteList: this.state.cns[i].records })
       }
     }
+
+    // remove static
+    await this.removeStatic()
 
     this.state = {}
   }

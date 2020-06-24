@@ -5,3 +5,5 @@ CHANGELOG.md
 *.test.js
 tests/src/.next
 tests/src/node_modules
+
+.next
