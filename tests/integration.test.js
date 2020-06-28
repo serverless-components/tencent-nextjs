@@ -46,7 +46,7 @@ it('should successfully deploy nextjs app', async () => {
 it('should successfully update basic configuration', async () => {
   instanceYaml.inputs.region = 'ap-shanghai'
   instanceYaml.inputs.runtime = 'Nodejs8.9'
-  instanceYaml.inputs.functionName = 'expressDemo01'
+  instanceYaml.inputs.functionName = 'nextjsDemoTest'
 
   const instance = await sdk.deploy(instanceYaml, credentials)
 
