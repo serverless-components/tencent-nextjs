@@ -21,3 +21,6 @@ env.js
 package-lock.json
 test
 yarn.lock
+test/src/node_modules
+test/src/.next
+test/src/package-lock.json

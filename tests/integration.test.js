@@ -14,7 +14,7 @@ const instanceYaml = {
   name: `nextjs-integration-tests-${generateId()}`,
   stage: 'dev',
   inputs: {
-    region: 'ap-guangzhou',
+    region: 'ap-hongkong',
     runtime: 'Nodejs8.9',
     apigatewayConf: { environment: 'test' }
   }
