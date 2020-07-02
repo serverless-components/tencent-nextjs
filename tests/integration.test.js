@@ -14,8 +14,8 @@ const instanceYaml = {
   name: `nextjs-integration-tests-${generateId()}`,
   stage: 'dev',
   inputs: {
-    region: 'ap-hongkong',
-    runtime: 'Nodejs8.9',
+    region: 'ap-guangzhou',
+    runtime: 'Nodejs10.15',
     apigatewayConf: { environment: 'test' }
   }
 }
@@ -30,6 +30,7 @@ const sdk = getServerlessSdk(instanceYaml.org)
 
 it('should successfully deploy nextjs app', async () => {
   const instance = await sdk.deploy(instanceYaml, { tencent: {} })
+
   expect(instance).toBeDefined()
   expect(instance.instanceName).toEqual(instanceYaml.name)
   expect(instance.outputs).toBeDefined()
@@ -40,19 +41,9 @@ it('should successfully deploy nextjs app', async () => {
   expect(instance.outputs.scf.runtime).toEqual(instanceYaml.inputs.runtime)
   expect(instance.outputs.apigw).toBeDefined()
   expect(instance.outputs.apigw.environment).toEqual(instanceYaml.inputs.apigatewayConf.environment)
-})
 
-it('should successfully update source code', async () => {
-  // change source to own source './src' and need to install packages before deploy
-  const srcPath = path.join(__dirname, 'src')
-  execSync('npm install && npm run build', { cwd: srcPath })
-  instanceYaml.inputs.src = srcPath
-
-  const instance = await sdk.deploy(instanceYaml, credentials)
   const response = await axios.get(instance.outputs.apigw.url)
-
-  expect(instance.outputs.templateUrl).not.toBeDefined()
-  expect(response.data.includes('Test Nextjs')).toBeTruthy()
+  expect(response.data.includes('Next.js!')).toBeTruthy()
 })
 
 it('should successfully remove nextjs app', async () => {
