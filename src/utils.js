@@ -9,19 +9,32 @@ const AdmZip = require('adm-zip')
 const CONFIGS = require('./config')
 
 /*
- * Pauses execution for the provided miliseconds
- *
- * @param ${number} wait - number of miliseconds to wait
- */
-const sleep = async (wait) => new Promise((resolve) => setTimeout(() => resolve(), wait))
-
-/*
  * Generates a random id
  */
 const generateId = () =>
   Math.random()
     .toString(36)
     .substring(6)
+
+const getType = (obj) => {
+  return Object.prototype.toString.call(obj).slice(8, -1)
+}
+
+const validateTraffic = (num) => {
+  if (getType(num) !== 'Number') {
+    throw new TypeError(
+      `PARAMETER_${CONFIGS.compName.toUpperCase()}_TRAFFIC`,
+      'traffic must be a number'
+    )
+  }
+  if (num < 0 || num > 1) {
+    throw new TypeError(
+      `PARAMETER_${CONFIGS.compName.toUpperCase()}_TRAFFIC`,
+      'traffic must be a number between 0 and 1'
+    )
+  }
+  return true
+}
 
 const getCodeZipPath = async (instance, inputs) => {
   console.log(`Packaging ${CONFIGS.compFullname} application...`)
@@ -292,6 +305,9 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
       stateFunctionName ||
       `${CONFIGS.compName}_component_${generateId()}`,
     region: regionList,
+    role: ensureString(tempFunctionConf.role ? tempFunctionConf.role : inputs.role, {
+      default: ''
+    }),
     handler: ensureString(tempFunctionConf.handler ? tempFunctionConf.handler : inputs.handler, {
       default: CONFIGS.handler
     }),
@@ -311,8 +327,18 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
     fromClientRemark,
     layers: ensureIterable(tempFunctionConf.layers ? tempFunctionConf.layers : inputs.layers, {
       default: []
-    })
+    }),
+    publish: inputs.publish,
+    traffic: inputs.traffic,
+    lastVersion: instance.state.lastVersion
   }
+
+  // validate traffic
+  if (inputs.traffic !== undefined) {
+    validateTraffic(inputs.traffic)
+  }
+  functionConf.needSetTraffic = inputs.traffic !== undefined && functionConf.lastVersion
+
   functionConf.tags = ensureObject(tempFunctionConf.tags ? tempFunctionConf.tags : inputs.tag, {
     default: null
   })
@@ -445,7 +471,6 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
 
 module.exports = {
   generateId,
-  sleep,
   mergeJson,
   capitalString,
   getDefaultProtocol,
