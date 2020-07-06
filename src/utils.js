@@ -47,9 +47,13 @@ const getCodeZipPath = async (instance, inputs) => {
     const filename = 'template'
 
     console.log(`Installing Default ${CONFIGS.compFullname} App...`)
-    await download(CONFIGS.templateUrl, downloadPath, {
-      filename: `${filename}.zip`
-    })
+    try {
+      await download(CONFIGS.templateUrl, downloadPath, {
+        filename: `${filename}.zip`
+      })
+    } catch (e) {
+      throw new TypeError(`DOWNLOAD_TEMPLATE`, 'Download default template failed.')
+    }
     zipPath = `${downloadPath}/${filename}.zip`
   } else {
     zipPath = inputs.code.src
@@ -127,7 +131,10 @@ const prepareStaticCdnInputs = async (instance, inputs, origin) => {
     // using these default configs, for making user's config more simple
     cdnInputs.forceRedirect = cdnConf.https.forceRedirect || CONFIGS.defaultCdnConf.forceRedirect
     if (!cdnConf.https.certId) {
-      throw new TypeError('PARAMETER_NEXTJS_HTTPS', 'https.certId is required')
+      throw new TypeError(
+        `PARAMETER_${CONFIGS.compName.toUpperCase()}_HTTPS`,
+        'https.certId is required'
+      )
     }
     cdnInputs.https = {
       ...CONFIGS.defaultCdnConf.https,
