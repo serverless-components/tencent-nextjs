@@ -279,10 +279,7 @@ class ServerlessComopnent extends Component {
     this.state.region = regionList[0]
     this.state.regionList = regionList
 
-    this.state.lambdaArn = {
-      functionName: functionConf.name,
-      namespace: functionConf.namespace
-    }
+    this.state.lambdaArn = functionConf.name
 
     return outputs
   }
