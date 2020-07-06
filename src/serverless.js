@@ -357,11 +357,17 @@ class ServerlessComopnent extends Component {
   async metrics(inputs = {}) {
     console.log(`Get ${CONFIGS.compFullname} Metrics Datas...`)
     if (!inputs.rangeStart || !inputs.rangeEnd) {
-      throw new TypeError('PARAMETER_NEXTJS_METRICS', 'rangeStart and rangeEnd are require inputs')
+      throw new TypeError(
+        `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+        'rangeStart and rangeEnd are require inputs'
+      )
     }
     const { region } = this.state
     if (!region) {
-      throw new TypeError('PARAMETER_NEXTJS_METRICS', 'No region property in state')
+      throw new TypeError(
+        `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+        'No region property in state'
+      )
     }
     const { functionName, namespace, functionVersion } = this.state[region] || {}
     if (functionName) {
@@ -381,7 +387,10 @@ class ServerlessComopnent extends Component {
       )
       return metricResults
     }
-    throw new TypeError('PARAMETER_NEXTJS_METRICS', 'Function name not define')
+    throw new TypeError(
+      `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+      'Function name not define'
+    )
   }
 }
 
