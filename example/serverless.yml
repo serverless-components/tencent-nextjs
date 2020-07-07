@@ -1,7 +1,7 @@
 org: orgDemo
 app: appDemo
 stage: dev
-component: nextjs@dev
+component: nextjs
 name: nextjsDemo
 
 inputs:
@@ -17,16 +17,3 @@ inputs:
       - http
       - https
     environment: release
-  staticCdn:
-    cosConf:
-      bucket: static-bucket
-      # sources:
-      #   - src: .next
-      #     targetDir: /_next
-      #   - src: public
-      #     targetDir: /
-    cdnConf:
-      domain: test.yuga.chat
-      onlyRefresh: true
-      https:
-        certId: 'cWOJJjax'

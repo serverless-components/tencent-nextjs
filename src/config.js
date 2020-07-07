@@ -8,6 +8,7 @@ const CONFIGS = {
   timeout: 3,
   memorySize: 128,
   namespace: 'default',
+  description: 'Created by Serverless Component',
   defaultStatics: [
     { src: '.next', targetDir: '/_next' },
     { src: 'public', targetDir: '/' }
