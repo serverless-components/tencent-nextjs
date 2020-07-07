@@ -30,6 +30,7 @@ inputs:
   layers:
     - name: layerName #  layer名称
       version: 1 #  版本
+  traffic: 0.9 # 配置默认流量中 $LATEST 版本比重：0 - 1
   functionConf: # 函数配置相关
     timeout: 10 # 超时时间，单位秒
     memorySize: 128 # 内存大小，单位MB
@@ -66,52 +67,28 @@ inputs:
       secretName: secret
       secretIds:
         - xxx
-  staticCdn:
-    cosConf:
-      bucket: static-bucket
-      acl:
-        permissions: public-read
-      sources:
-        - src: .next
-          targetDir: /_next
-        - src: public
-          targetDir: /
-    cdnConf:
-      area: mainland
-      domain: cnode.yuga.chat
-      autoRefresh: true
-      refreshType: delete
-      forceRedirect:
-        switch: on
-        redirectType: https
-        redirectStatusCode: 301
-      https:
-        http2: on
-        certId: 'eGkM75xv'
 ```
 
 ## 配置描述
 
 主要的参数
 
-| 参数名称                             | 是否必选 |     默认值      | 描述                                                                |
-| ------------------------------------ | :------: | :-------------: | :------------------------------------------------------------------ |
-| runtime                              |    否    |   Nodejs10.15   | 执行环境, 目前支持: Nodejs6.10, Nodejs8.9, Nodejs10.15, Nodejs12.16 |
-| region                               |    否    |  ap-guangzhou   | 项目部署所在区域，默认广州区                                        |
-| functionName                         |    否    |                 | 云函数名称                                                          |
-| serviceName                          |    否    |                 | API 网关服务名称, 默认创建一个新的服务名称                          |
-| serviceId                            |    否    |                 | API 网关服务 ID,如果存在将使用这个 API 网关服务                     |
-| src                                  |    否    | `process.cwd()` | 默认为当前目录, 如果是对象, 配置参数参考 [执行目录](#执行目录)      |
-| layers                               |    否    |                 | 云函数绑定的 layer, 配置参数参考 [层配置](#层配置)                  |
-| exclude                              |    否    |                 | 不包含的文件                                                        |
-| include                              |    否    |                 | 包含的文件, 如果是相对路径，是相对于 `serverless.yml`的路径         |
-| [staticCdn](#静态资源-CDN-配置)      |    否    |                 | 静态资源 CDN 配置                                                   |
-| [functionConf](#函数配置)            |    否    |                 | 函数配置                                                            |
-| [apigatewayConf](#API-网关配置)      |    否    |                 | API 网关配置                                                        |
-| [cloudDNSConf](#DNS-配置)            |    否    |                 | DNS 配置                                                            |
-| [Region special config](#指定区配置) |    否    |                 | 指定区配置                                                          |
+| 参数名称                             | 是否必选 |     默认值      | 描述                                                                                                                                                                                                     |
+| ------------------------------------ | :------: | :-------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| runtime                              |    否    |   Nodejs10.15   | 执行环境, 目前支持: Nodejs6.10, Nodejs8.9, Nodejs10.15, Nodejs12.16                                                                                                                                      |
+| region                               |    否    |  ap-guangzhou   | 项目部署所在区域，默认广州区                                                                                                                                                                             |
+| functionName                         |    否    |                 | 云函数名称                                                                                                                                                                                               |
+| serviceName                          |    否    |                 | API 网关服务名称, 默认创建一个新的服务名称                                                                                                                                                               |
+| serviceId                            |    否    |                 | API 网关服务 ID,如果存在将使用这个 API 网关服务                                                                                                                                                          |
+| src                                  |    否    | `process.cwd()` | 默认为当前目录, 如果是对象, 配置参数参考 [执行目录](#执行目录)                                                                                                                                           |
+| layers                               |    否    |                 | 云函数绑定的 layer, 配置参数参考 [层配置](#层配置)                                                                                                                                                       |
+| traffic                              |    否    |        1        | 配置默认流量中 `$LATEST` 版本比重，取值范围：0 ~ 1，比如 80%，可配置成 0.8。注意如果配置灰度流量，需要配置对应的 API 网关触发器的 endpoints 的 `function.functionQualifier` 参数为 `$DEFAULT` (默认流量) |
+| [functionConf](#函数配置)            |    否    |                 | 函数配置                                                                                                                                                                                                 |
+| [apigatewayConf](#API-网关配置)      |    否    |                 | API 网关配置                                                                                                                                                                                             |
+| [cloudDNSConf](#DNS-配置)            |    否    |                 | DNS 配置                                                                                                                                                                                                 |
+| [Region special config](#指定区配置) |    否    |                 | 指定区配置                                                                                                                                                                                               |
 
-### 执行目录
+## 执行目录
 
 | 参数名称 | 是否必选 |      类型       | 默认值 | 描述                                                                                                                                                                                 |
 | -------- | :------: | :-------------: | :----: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -120,7 +97,7 @@ inputs:
 | bucket   |    否    |     String      |        | bucket 名称。如果配置了 src，表示部署 src 的代码并压缩成 zip 后上传到 bucket-appid 对应的存储桶中；如果配置了 object，表示获取 bucket-appid 对应存储桶中 object 对应的代码进行部署。 |
 | object   |    否    |     String      |        | 部署的代码在存储桶中的路径。                                                                                                                                                         |
 
-### 层配置
+## 层配置
 
 | 参数名称 | 是否必选 |  类型  | 默认值 | 描述     |
 | -------- | :------: | :----: | :----: | :------- |
@@ -219,62 +196,3 @@ Refer to: https://cloud.tencent.com/document/product/628/14906
 | ----------- | :------: | :----- | :------------- |
 | path        |    是    | String | 自定义映射路径 |
 | environment |    是    | String | 自定义映射环境 |
-
-### 静态资源 CDN 配置
-
-| 参数名称 | 是否必选 |  类型  | 默认值 | 描述                  |
-| -------- | :------: | :----: | :----: | :-------------------- |
-| cosConf  |    是    | Object |        | [COS 配置](#cos-配置) |
-| cdnConf  |    否    | Object |        | [CDN 配置](#cdn-配置) |
-
-##### COS 配置
-
-| 参数名称 | 是否必选 |   类型   |                                  默认值                                  | 描述                             |
-| -------- | :------: | :------: | :----------------------------------------------------------------------: | :------------------------------- |
-| bucket   |    是    |  string  |                                                                          | COS 存储同名称，没有将自动创建   |
-| acl      |    否    |  Object  |                                                                          | 存储桶权限配置，参考 [acl](#acl) |
-| sources  |    否    | Object[] | `[{src: '.next', targetDir: '/_next'}, {src: 'public', targetDir: '/'}]` | 需要托管到 COS 的静态资源目录    |
-
-###### acl
-
-| 参数名称    | 是否必选 |  类型  |    默认值     | 描述         |
-| ----------- | :------: | :----: | :-----------: | :----------- |
-| permissions |    是    | string | `public-read` | 公共权限配置 |
-
-##### CDN 配置
-
-area: mainland
-domain: cnode.yuga.chat
-autoRefresh: true
-refreshType: delete
-forceRedirect:
-switch: on
-redirectType: https
-redirectStatusCode: 301
-https:
-http2: on
-certId: 'eGkM75xv'
-
-| 参数名称      | 是否必选 |  类型   |   默认值   | 描述                                                       |
-| ------------- | :------: | :-----: | :--------: | :--------------------------------------------------------- |
-| domain        |    是    | string  |            | CDN 域名                                                   |
-| area          |    否    | string  | `mainland` | 加速区域，mainland: 大陆，overseas：海外，global：全球加速 |
-| autoRefresh   |    否    | boolean |   `true`   | 是否自动刷新 CDN                                           |
-| refreshType   |    否    | boolean |  `delete`  | CDN 刷新类型，delete：刷新全部资源，flush：刷新变更资源    |
-| forceRedirect |    否    | Object  |            | 访问协议强制跳转配置，参考 [forceRedirect](#forceRedirect) |
-| https         |    否    | Object  |            | https 配置，参考 [https](#https)                           |
-
-###### forceRedirect
-
-| 参数名称           | 是否必选 |  类型  | 默认值 | 描述                                                           |
-| ------------------ | :------: | :----: | :----: | :------------------------------------------------------------- |
-| switch             |    是    | string |  `on`  | 访问强制跳转配置开关, on：开启，off：关闭                      |
-| redirectType       |    是    | string | `http` | 访问强制跳转类型，http：强制 http 跳转，https：强制 https 跳转 |
-| redirectStatusCode |    是    | number | `301`  | 强制跳转时返回状态码，支持 301、302                            |
-
-###### https
-
-| 参数名称 | 是否必选 |  类型  | 默认值 | 描述                                  |
-| -------- | :------: | :----: | :----: | :------------------------------------ |
-| certId   |    是    | string |        | 腾讯云托管域名证书 ID                 |
-| http2    |    是    | string |        | 是否开启 HTTP2，on： 开启，off： 关闭 |
