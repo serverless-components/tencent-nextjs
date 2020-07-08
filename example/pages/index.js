@@ -5,7 +5,7 @@ const Home = () => (
   <div className="container">
     <Head>
       <title>Create Next App</title>
-      <link rel="icon" href={`${process.env.STATIC_URL}/favicon.ico`} />
+      <link rel="icon" href="/favicon.ico" />
     </Head>
 
     <main>
@@ -24,7 +24,7 @@ const Home = () => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        Powered by <img src={`${process.env.STATIC_URL}/zeit.svg`} alt="ZEIT Logo" />
+        Powered by <img src="/zeit.svg" alt="ZEIT Logo" />
       </a>
     </footer>
   </div>
