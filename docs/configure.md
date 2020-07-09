@@ -67,7 +67,7 @@ inputs:
       secretName: secret
       secretIds:
         - xxx
-  staticCdn:
+  staticConf:
     cosConf:
       bucket: static-bucket
       acl:
@@ -109,7 +109,7 @@ inputs:
 | [apigatewayConf](#API-网关配置)      |    否    |                 | API 网关配置                                                                                                                                                                                             |
 | [cloudDNSConf](#DNS-配置)            |    否    |                 | DNS 配置                                                                                                                                                                                                 |
 | [Region special config](#指定区配置) |    否    |                 | 指定区配置                                                                                                                                                                                               |
-| [staticCdn](#静态资源-CDN-配置)      |    否    |                 | 静态资源 CDN 配置                                                                                                                                                                                        |
+| [staticConf](#静态资源-CDN-配置)     |    否    |                 | 静态资源 CDN 配置                                                                                                                                                                                        |
 
 ## 执行目录
 

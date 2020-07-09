@@ -268,11 +268,11 @@ class ServerlessComopnent extends Component {
     }
 
     // start deploy static cdn
-    if (inputs.staticCdn) {
-      const staticDeployRes = await this.deployStatic(credentials, inputs.staticCdn, regionList[0])
+    if (inputs.staticConf) {
+      const staticDeployRes = await this.deployStatic(credentials, inputs.staticConf, regionList[0])
       if (staticDeployRes) {
-        this.state.staticCdn = staticDeployRes
-        outputs.staticCdn = staticDeployRes
+        this.state.staticConf = staticDeployRes
+        outputs.staticConf = staticDeployRes
       }
     }
 
@@ -286,19 +286,19 @@ class ServerlessComopnent extends Component {
 
   async removeStatic() {
     // remove static
-    const { region, staticCdn } = this.state
-    if (staticCdn) {
+    const { region, staticConf } = this.state
+    if (staticConf) {
       const credentials = this.getCredentials()
       // 1. remove cos
-      if (staticCdn.cos) {
+      if (staticConf.cos) {
         const cos = new Cos(credentials, region)
-        await cos.remove(staticCdn.cos)
+        await cos.remove(staticConf.cos)
       }
       // 2. remove cdn
-      if (staticCdn.cdn) {
+      if (staticConf.cdn) {
         const cdn = new Cdn(credentials)
         try {
-          await cdn.remove(staticCdn.cdn)
+          await cdn.remove(staticConf.cdn)
         } catch (e) {
           // no op
         }
