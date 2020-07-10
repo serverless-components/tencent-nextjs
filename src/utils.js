@@ -389,6 +389,7 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
     {
       path: '/',
       enableCORS: apigatewayConf.enableCORS,
+      serviceTimeout: apigatewayConf.serviceTimeout,
       method: 'ANY',
       function: {
         isIntegratedResponse: true,
