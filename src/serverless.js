@@ -184,6 +184,7 @@ class ServerlessComopnent extends Component {
     const deployStaticOutpus = {}
 
     if (zipPath) {
+      console.log(`Deploy static for ${CONFIGS.compFullname} application`)
       // 1. deploy to cos
       const staticCosInputs = await prepareStaticCosInputs(this, inputs, appId, zipPath)
 
@@ -197,6 +198,7 @@ class ServerlessComopnent extends Component {
         const deployRes = await cos.deploy(curInputs)
         cosOutput.cosOrigin = `${curInputs.bucket}.cos.${region}.myqcloud.com`
         cosOutput.bucket = deployRes.bucket
+        cosOutput.url = `https://${curInputs.bucket}.cos.${region}.myqcloud.com`
         console.log(`Deploy directory ${curInputs.src} to cos bucket ${curInputs.bucket} success`)
       }
       deployStaticOutpus.cos = cosOutput
@@ -217,6 +219,8 @@ class ServerlessComopnent extends Component {
 
         console.log(`Deploy cdn ${cdnInputs.domain} success`)
       }
+
+      console.log(`Deployed static for ${CONFIGS.compFullname} application successfully`)
 
       return deployStaticOutpus
     }
@@ -288,6 +292,7 @@ class ServerlessComopnent extends Component {
     // remove static
     const { region, staticConf } = this.state
     if (staticConf) {
+      console.log(`Removing static config`)
       const credentials = this.getCredentials()
       // 1. remove cos
       if (staticConf.cos) {
@@ -303,6 +308,7 @@ class ServerlessComopnent extends Component {
           // no op
         }
       }
+      console.log(`Remove static config success`)
     }
   }
 

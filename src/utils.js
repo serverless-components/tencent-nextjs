@@ -63,97 +63,113 @@ const getCodeZipPath = async (instance, inputs) => {
 }
 
 const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
-  const staticCosInputs = []
-  const { cosConf } = inputs
-  const sources = cosConf.sources || CONFIGS.defaultStatics
-  const { bucket } = cosConf
-  const staticPath = `/tmp/${generateId()}`
-  const codeZip = new AdmZip(codeZipPath)
-  const entries = codeZip.getEntries()
+  try {
+    const staticCosInputs = []
+    const { cosConf } = inputs
+    const sources = cosConf.sources || CONFIGS.defaultStatics
+    const { bucket } = cosConf
+    const staticPath = `/tmp/${generateId()}`
+    const codeZip = new AdmZip(codeZipPath)
+    const entries = codeZip.getEntries()
 
-  // traverse sources, generate static directory and deploy to cos
-  for (let i = 0; i < sources.length; i++) {
-    const curSource = sources[i]
-    const entryName = `${curSource.src}`
-    let exist = false
-    entries.forEach((et) => {
-      if (et.entryName.indexOf(entryName) === 0) {
-        codeZip.extractEntryTo(et, staticPath, true, true)
-        exist = true
-      }
-    })
-    if (exist) {
-      const cosInputs = {
-        force: true,
-        protocol: cosConf.protocol,
-        bucket: `${bucket}-${appId}`,
-        src: `${staticPath}/${entryName}`,
-        keyPrefix: curSource.targetDir || '/',
-        acl: {
-          permissions: 'public-read',
-          grantRead: '',
-          grantWrite: '',
-          grantFullControl: ''
+    // traverse sources, generate static directory and deploy to cos
+    for (let i = 0; i < sources.length; i++) {
+      const curSource = sources[i]
+      const entryName = `${curSource.src}`
+      let exist = false
+      entries.forEach((et) => {
+        if (et.entryName.indexOf(entryName) === 0) {
+          codeZip.extractEntryTo(et, staticPath, true, true)
+          exist = true
         }
-      }
-
-      if (cosConf.acl) {
-        cosInputs.acl = {
-          permissions: cosConf.acl.permissions || 'public-read',
-          grantRead: cosConf.acl.grantRead || '',
-          grantWrite: cosConf.acl.grantWrite || '',
-          grantFullControl: cosConf.acl.grantFullControl || ''
+      })
+      if (exist) {
+        const cosInputs = {
+          force: true,
+          protocol: cosConf.protocol,
+          bucket: `${bucket}-${appId}`,
+          src: `${staticPath}/${entryName}`,
+          keyPrefix: curSource.targetDir || '/',
+          acl: {
+            permissions: 'public-read',
+            grantRead: '',
+            grantWrite: '',
+            grantFullControl: ''
+          }
         }
-      }
 
-      staticCosInputs.push(cosInputs)
+        if (cosConf.acl) {
+          cosInputs.acl = {
+            permissions: cosConf.acl.permissions || 'public-read',
+            grantRead: cosConf.acl.grantRead || '',
+            grantWrite: cosConf.acl.grantWrite || '',
+            grantFullControl: cosConf.acl.grantFullControl || ''
+          }
+        }
+
+        staticCosInputs.push(cosInputs)
+      }
     }
+    return staticCosInputs
+  } catch (e) {
+    throw new TypeError(
+      `UTILS_${CONFIGS.compName.toUpperCase()}_prepareStaticCosInputs`,
+      e.message,
+      e.stack
+    )
   }
-  return staticCosInputs
 }
 
 const prepareStaticCdnInputs = async (instance, inputs, origin) => {
-  const { cdnConf } = inputs
-  const cdnInputs = {
-    async: true,
-    area: cdnConf.area || 'mainland',
-    domain: cdnConf.domain,
-    serviceType: 'web',
-    origin: {
-      origins: [origin],
-      originType: 'cos',
-      originPullProtocol: 'https'
-    },
-    autoRefresh: true,
-    ...cdnConf
-  }
-  if (cdnConf.https) {
-    // using these default configs, for making user's config more simple
-    cdnInputs.forceRedirect = cdnConf.https.forceRedirect || CONFIGS.defaultCdnConf.forceRedirect
-    if (!cdnConf.https.certId) {
-      throw new TypeError(
-        `PARAMETER_${CONFIGS.compName.toUpperCase()}_HTTPS`,
-        'https.certId is required'
-      )
+  try {
+    const { cdnConf } = inputs
+    const cdnInputs = {
+      async: true,
+      area: cdnConf.area || 'mainland',
+      domain: cdnConf.domain,
+      serviceType: 'web',
+      origin: {
+        origins: [origin],
+        originType: 'cos',
+        originPullProtocol: 'https'
+      },
+      autoRefresh: true,
+      ...cdnConf
     }
-    cdnInputs.https = {
-      ...CONFIGS.defaultCdnConf.https,
-      ...{
-        http2: cdnConf.https.http2 || 'on',
-        certInfo: {
-          certId: cdnConf.https.certId
+    if (cdnConf.https) {
+      // using these default configs, for making user's config more simple
+      cdnInputs.forceRedirect = cdnConf.https.forceRedirect || CONFIGS.defaultCdnConf.forceRedirect
+      if (!cdnConf.https.certId) {
+        throw new TypeError(
+          `PARAMETER_${CONFIGS.compName.toUpperCase()}_HTTPS`,
+          'https.certId is required'
+        )
+      }
+      cdnInputs.https = {
+        ...CONFIGS.defaultCdnConf.https,
+        ...{
+          http2: cdnConf.https.http2 || 'on',
+          certInfo: {
+            certId: cdnConf.https.certId
+          }
         }
       }
     }
-  }
-  if (cdnInputs.autoRefresh) {
-    cdnInputs.refreshCdn = {
-      flushType: cdnConf.refreshType || 'delete',
-      urls: [`http://${cdnInputs.domain}`, `https://${cdnInputs.domain}`]
+    if (cdnInputs.autoRefresh) {
+      cdnInputs.refreshCdn = {
+        flushType: cdnConf.refreshType || 'delete',
+        urls: [`http://${cdnInputs.domain}`, `https://${cdnInputs.domain}`]
+      }
     }
-  }
 
-  return cdnInputs
+    return cdnInputs
+  } catch (e) {
+    throw new TypeError(
+      `UTILS_${CONFIGS.compName.toUpperCase()}_prepareStaticCdnInputs`,
+      e.message,
+      e.stack
+    )
+  }
 }
 
 /**
@@ -483,9 +499,8 @@ module.exports = {
   capitalString,
   getDefaultProtocol,
   deleteRecord,
-  prepareInputs,
-  getCodeZipPath,
   uploadCodeToCos,
+  prepareInputs,
   prepareStaticCosInputs,
   prepareStaticCdnInputs
 }
