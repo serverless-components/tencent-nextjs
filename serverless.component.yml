@@ -1,5 +1,5 @@
 name: nextjs
-version: 0.0.8
+version: 0.0.9
 author: Tencent Cloud, Inc.
 org: Tencent Cloud, Inc.
 description: Deploy a serverless Next.js application onto Tencent SCF and API Gateway.
@@ -8,3 +8,4 @@ repo: https://github.com/serverless-components/tencent-nextjs
 readme: https://github.com/serverless-components/tencent-nextjs/tree/master/README.md
 license: MIT
 main: ./src
+webDeployable: true
