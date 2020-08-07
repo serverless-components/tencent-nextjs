@@ -364,14 +364,14 @@ class ServerlessComopnent extends Component {
     console.log(`Get ${CONFIGS.compFullname} Metrics Datas...`)
     if (!inputs.rangeStart || !inputs.rangeEnd) {
       throw new TypeError(
-        `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+        `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
         'rangeStart and rangeEnd are require inputs'
       )
     }
     const { region } = this.state
     if (!region) {
       throw new TypeError(
-        `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+        `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
         'No region property in state'
       )
     }
@@ -394,7 +394,7 @@ class ServerlessComopnent extends Component {
       return metricResults
     }
     throw new TypeError(
-      `PARAMETER_${CONFIGS.compName.toUppoerCase()}_METRICS`,
+      `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
       'Function name not define'
     )
   }
