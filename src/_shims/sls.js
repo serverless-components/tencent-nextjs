@@ -1,13 +1,13 @@
 const express = require('express')
 const next = require('next')
 
-const app = next({ dev: false })
-const handle = app.getRequestHandler()
-
-// not report route for custom monitor
-const noReportRoutes = ['/_next', '/static']
-
 async function createServer() {
+  const app = next({ dev: false })
+  const handle = app.getRequestHandler()
+
+  // not report route for custom monitor
+  const noReportRoutes = ['/_next', '/static', '/favicon.ico']
+
   await app.prepare()
   const server = express()
 
