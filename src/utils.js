@@ -20,6 +20,14 @@ const getType = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1)
 }
 
+const removeAppid = (str, appid) => {
+  const suffix = `-${appid}`
+  if (!str || str.indexOf(suffix) === -1) {
+    return str
+  }
+  return str.slice(0, -suffix.length)
+}
+
 const validateTraffic = (num) => {
   if (getType(num) !== 'Number') {
     throw new TypeError(
@@ -68,6 +76,8 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
     const { cosConf } = inputs
     const sources = cosConf.sources || CONFIGS.defaultStatics
     const { bucket } = cosConf
+    // remove user append appid
+    const bucketName = removeAppid(bucket, appId)
     const staticPath = `/tmp/${generateId()}`
     const codeZip = new AdmZip(codeZipPath)
     const entries = codeZip.getEntries()
@@ -87,7 +97,7 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
         const cosInputs = {
           force: true,
           protocol: cosConf.protocol,
-          bucket: `${bucket}-${appId}`,
+          bucket: `${bucketName}-${appId}`,
           src: `${staticPath}/${entryName}`,
           keyPrefix: curSource.targetDir || '/',
           acl: {
