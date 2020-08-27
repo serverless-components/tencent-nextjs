@@ -1,6 +1,4 @@
 const { generateId, getServerlessSdk } = require('./utils')
-const execSync = require('child_process').execSync
-const path = require('path')
 const axios = require('axios')
 
 // set enough timeout for deployment to finish
@@ -10,7 +8,7 @@ jest.setTimeout(600000)
 const instanceYaml = {
   org: 'orgDemo',
   app: 'appDemo',
-  component: 'nextjs@dev',
+  component: 'nextjs',
   name: `nextjs-integration-tests-${generateId()}`,
   stage: 'dev',
   inputs: {

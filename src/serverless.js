@@ -365,13 +365,6 @@ class ServerlessComopnent extends Component {
 
     await Promise.all(removeHandlers)
 
-    if (state.cns) {
-      const cns = new Cns(credentials)
-      for (let i = 0; i < this.state.cns.length; i++) {
-        await cns.remove({ deleteList: this.state.cns[i].records })
-      }
-    }
-
     // remove static
     await this.removeStatic()
 

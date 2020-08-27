@@ -21,6 +21,21 @@ const getType = (obj) => {
   return Object.prototype.toString.call(obj).slice(8, -1)
 }
 
+const mergeJson = (sourceJson, targetJson) => {
+  Object.entries(sourceJson).forEach(([key, val]) => {
+    targetJson[key] = deepClone(val)
+  })
+  return targetJson
+}
+
+const capitalString = (str) => {
+  if (str.length < 2) {
+    return str.toUpperCase()
+  }
+
+  return `${str[0].toUpperCase()}${str.slice(1)}`
+}
+
 const getDefaultProtocol = (protocols) => {
   return String(protocols).includes('https') ? 'https' : 'http'
 }
@@ -85,6 +100,78 @@ const getCodeZipPath = async (instance, inputs) => {
   }
 
   return zipPath
+}
+
+/**
+ * Upload code to COS
+ * @param {Component} instance serverless component instance
+ * @param {string} appId app id
+ * @param {object} credentials credentials
+ * @param {object} inputs component inputs parameters
+ * @param {string} region region
+ */
+const uploadCodeToCos = async (instance, appId, credentials, inputs, region) => {
+  const bucketName = inputs.code.bucket || `sls-cloudfunction-${region}-code`
+  const objectName = inputs.code.object || `${inputs.name}-${Math.floor(Date.now() / 1000)}.zip`
+  // if set bucket and object not pack code
+  if (!inputs.code.bucket || !inputs.code.object) {
+    const zipPath = await getCodeZipPath(instance, inputs)
+    console.log(`Code zip path ${zipPath}`)
+
+    // save the zip path to state for lambda to use it
+    instance.state.zipPath = zipPath
+
+    const cos = new Cos(credentials, region)
+
+    if (!inputs.code.bucket) {
+      // create default bucket
+      await cos.deploy({
+        bucket: bucketName + '-' + appId,
+        force: true,
+        lifecycle: [
+          {
+            status: 'Enabled',
+            id: 'deleteObject',
+            filter: '',
+            expiration: { days: '10' },
+            abortIncompleteMultipartUpload: { daysAfterInitiation: '10' }
+          }
+        ]
+      })
+    }
+
+    // upload code to cos
+    if (!inputs.code.object) {
+      console.log(`Getting cos upload url for bucket ${bucketName}`)
+      const uploadUrl = await cos.getObjectUrl({
+        bucket: bucketName + '-' + appId,
+        object: objectName,
+        method: 'PUT'
+      })
+
+      // if shims and sls sdk entries had been injected to zipPath, no need to injected again
+      console.log(`Uploading code to bucket ${bucketName}`)
+      if (instance.codeInjected === true) {
+        await instance.uploadSourceZipToCOS(zipPath, uploadUrl, {}, {})
+      } else {
+        const slsSDKEntries = instance.getSDKEntries('_shims/handler.handler')
+        await instance.uploadSourceZipToCOS(zipPath, uploadUrl, slsSDKEntries, {
+          _shims: path.join(__dirname, '_shims')
+        })
+        instance.codeInjected = true
+      }
+      console.log(`Upload ${objectName} to bucket ${bucketName} success`)
+    }
+  }
+
+  // save bucket state
+  instance.state.bucket = bucketName
+  instance.state.object = objectName
+
+  return {
+    bucket: bucketName,
+    object: objectName
+  }
 }
 
 const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
@@ -197,93 +284,6 @@ const prepareStaticCdnInputs = async (instance, inputs, origin) => {
       e.stack
     )
   }
-}
-
-/**
- * Upload code to COS
- * @param {Component} instance serverless component instance
- * @param {string} appId app id
- * @param {object} credentials credentials
- * @param {object} inputs component inputs parameters
- * @param {string} region region
- */
-const uploadCodeToCos = async (instance, appId, credentials, inputs, region) => {
-  const bucketName = inputs.code.bucket || `sls-cloudfunction-${region}-code`
-  const objectName = inputs.code.object || `${inputs.name}-${Math.floor(Date.now() / 1000)}.zip`
-  // if set bucket and object not pack code
-  if (!inputs.code.bucket || !inputs.code.object) {
-    const zipPath = await getCodeZipPath(instance, inputs)
-    console.log(`Code zip path ${zipPath}`)
-
-    // save the zip path to state for lambda to use it
-    instance.state.zipPath = zipPath
-
-    const cos = new Cos(credentials, region)
-
-    if (!inputs.code.bucket) {
-      // create default bucket
-      await cos.deploy({
-        bucket: bucketName + '-' + appId,
-        force: true,
-        lifecycle: [
-          {
-            status: 'Enabled',
-            id: 'deleteObject',
-            filter: '',
-            expiration: { days: '10' },
-            abortIncompleteMultipartUpload: { daysAfterInitiation: '10' }
-          }
-        ]
-      })
-    }
-
-    // upload code to cos
-    if (!inputs.code.object) {
-      console.log(`Getting cos upload url for bucket ${bucketName}`)
-      const uploadUrl = await cos.getObjectUrl({
-        bucket: bucketName + '-' + appId,
-        object: objectName,
-        method: 'PUT'
-      })
-
-      // if shims and sls sdk entries had been injected to zipPath, no need to injected again
-      console.log(`Uploading code to bucket ${bucketName}`)
-      if (instance.codeInjected === true) {
-        await instance.uploadSourceZipToCOS(zipPath, uploadUrl, {}, {})
-      } else {
-        const slsSDKEntries = instance.getSDKEntries('_shims/handler.handler')
-        await instance.uploadSourceZipToCOS(zipPath, uploadUrl, slsSDKEntries, {
-          _shims: path.join(__dirname, '_shims')
-        })
-        instance.codeInjected = true
-      }
-      console.log(`Upload ${objectName} to bucket ${bucketName} success`)
-    }
-  }
-
-  // save bucket state
-  instance.state.bucket = bucketName
-  instance.state.object = objectName
-
-  return {
-    bucket: bucketName,
-    object: objectName
-  }
-}
-
-const mergeJson = (sourceJson, targetJson) => {
-  Object.entries(sourceJson).forEach(([key, val]) => {
-    targetJson[key] = deepClone(val)
-  })
-  return targetJson
-}
-
-const capitalString = (str) => {
-  if (str.length < 2) {
-    return str.toUpperCase()
-  }
-
-  return `${str[0].toUpperCase()}${str.slice(1)}`
 }
 
 const prepareInputs = async (instance, credentials, inputs = {}) => {
