@@ -6,7 +6,7 @@ async function createServer() {
   const handle = app.getRequestHandler()
 
   // not report route for custom monitor
-  const noReportRoutes = ['/_next', '/static', '/favicon.ico']
+  const noReportRoutes = ['/_next', '/favicon.ico']
 
   await app.prepare()
   const server = express()
