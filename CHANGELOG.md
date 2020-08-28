@@ -1,3 +1,15 @@
+# [0.1.0](https://github.com/serverless-components/tencent-nextjs/compare/v0.0.14...v0.1.0) (2020-08-28)
+
+
+### Bug Fixes
+
+* update deps for uniform error message ([b2a0ea4](https://github.com/serverless-components/tencent-nextjs/commit/b2a0ea423e89a1ec4694bb8fae11b881412b6f36))
+
+
+### Features
+
+* optimize deploy flow and update deps ([6c34a4d](https://github.com/serverless-components/tencent-nextjs/commit/6c34a4d1d8f74be5f55aa7a1659f5786b366771b))
+
 ## [0.0.14](https://github.com/serverless-components/tencent-nextjs/compare/v0.0.13...v0.0.14) (2020-08-26)
 
 
