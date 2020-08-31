@@ -88,7 +88,7 @@ inputs:
     environment: release
 ```
 
-- 点此查看[更多配置及说明](https://github.com/serverless-components/tencent-nextjs/tree/v2/docs/configure.md)
+- 点此查看[更多配置及说明](https://github.com/serverless-components/tencent-nextjs/tree/master/docs/configure.md)
 
 ### 3. 部署
 
