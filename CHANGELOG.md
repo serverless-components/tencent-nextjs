@@ -1,3 +1,10 @@
+## [0.1.1](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.0...v0.1.1) (2020-09-01)
+
+
+### Bug Fixes
+
+* update tencent-component-toolkit ([7642596](https://github.com/serverless-components/tencent-nextjs/commit/7642596228f2972cd857096f4d30a31483175175))
+
 # [0.1.0](https://github.com/serverless-components/tencent-nextjs/compare/v0.0.14...v0.1.0) (2020-08-28)
 
 
