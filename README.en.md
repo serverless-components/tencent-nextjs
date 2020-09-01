@@ -4,7 +4,7 @@
 
 # Tencent Next.js Serverless Component
 
-[简体中文](https://github.com/serverless-components/tencent-nextjs/blob/v2/README.md) | English
+[简体中文](./README.md) | English
 
 ## Introduction
 
@@ -68,12 +68,13 @@ app: appDemo
 stage: dev
 
 inputs:
-  src: ./
+  src:
+    src: ./
+    exclude:
+      - .env
   functionName: nextjsDemo
   region: ap-guangzhou
   runtime: Nodejs10.15
-  exclude:
-    - .env
   apigatewayConf:
     protocols:
       - http
@@ -81,7 +82,7 @@ inputs:
     environment: release
 ```
 
-- [More Options](https://github.com/serverless-components/tencent-nextjs/blob/v2/docs/configure.md)
+- [More Options](/docs/configure.md)
 
 ### 4. Deploy
 
