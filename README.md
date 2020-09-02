@@ -183,7 +183,7 @@ const app = next({ dev: false })
 const handle = app.getRequestHandler()
 
 // not report route for custom monitor
-const noReportRoutes = ['/_next', '/static']
+const noReportRoutes = ['/_next', '/static', '/favicon.ico']
 
 async function createServer() {
   await app.prepare()
@@ -210,7 +210,7 @@ module.exports = createServer
 
 ## 自定义监控
 
-当在部署 Next.js 应用时，如果 `serverless.yml` 中未指定 `role`，默认会尝试绑定 `QCS_SCFExcuteRole`，并且开启自定义监控，帮助用户收集应用监控指标。对于为自定义入口文件的项目，会默认上报除含有 `/_next` 和 `/static` 的路由。如果你想自定义上报自己的路由性能，那么可以自定义 `sls.js` 入口文件，对于无需上报的路由，在 express 服务的 `req` 对象上添加 `__SLS_NO_REPORT__` 属性值为 `true` 即可。比如：
+当在部署 Next.js 应用时，如果 `serverless.yml` 中未指定 `role`，默认会尝试绑定 `QCS_SCFExcuteRole`，并且开启自定义监控，帮助用户收集应用监控指标。对于为自定义入口文件的项目，会默认上报除含有 `/_next`、`/static` 和 `/favicon.ico` 的路由。如果你想自定义上报自己的路由性能，那么可以自定义 `sls.js` 入口文件，对于无需上报的路由，在 express 服务的 `req` 对象上添加 `__SLS_NO_REPORT__` 属性值为 `true` 即可。比如：
 
 ```js
 server.get('/no-report', (req, res) => {
