@@ -1,3 +1,10 @@
+## [0.1.2](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.1...v0.1.2) (2020-09-03)
+
+
+### Bug Fixes
+
+* update deps ([b98c0f6](https://github.com/serverless-components/tencent-nextjs/commit/b98c0f653b58fb9a45f1a6baaa5e0a70e47d3b12))
+
 ## [0.1.1](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.0...v0.1.1) (2020-09-01)
 
 
