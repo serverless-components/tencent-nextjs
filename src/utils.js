@@ -372,6 +372,7 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
     description: getDefaultServiceDescription(instance),
     protocols: tempApigwConf.protocols || ['http'],
     environment: tempApigwConf.environment ? tempApigwConf.environment : 'release',
+    autoCreateDns: tempApigwConf.autoCreateDns ? tempApigwConf.autoCreateDns : false,
     endpoints: [
       {
         path: '/',

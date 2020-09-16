@@ -1,5 +1,5 @@
 const { Component } = require('@serverless/core')
-const { Scf, Apigw, Cns, Cam, Metrics, Cos, Cdn } = require('tencent-component-toolkit')
+const { Scf, Apigw, Cns, Cam, Metrics, Cos, Cdn, Domain } = require('tencent-component-toolkit')
 const { TypeError } = require('tencent-component-toolkit/src/utils/error')
 const {
   deepClone,
@@ -98,18 +98,24 @@ class ServerlessComopnent extends Component {
     return outputs
   }
 
-  // try to add dns record
-  async tryToAddDnsRecord(credentials, customDomains) {
+  // try to add dns record for custom domains
+  async tryToAddDnsRecordForCusDomain(credentials, customDomains) {
     try {
       const cns = new Cns(credentials)
+      const domain = new Domain(credentials)
       for (let i = 0; i < customDomains.length; i++) {
-        const item = customDomains[i]
-        if (item.domainPrefix) {
-          await cns.deploy({
-            domain: item.subDomain.replace(`${item.domainPrefix}.`, ''),
+        const item = customDomains[0]
+        const domainInfo = await domain.check(item.subDomain)
+        console.log(`Domain check result: ${JSON.stringify(domainInfo)}`)
+        if (domainInfo) {
+          // prefix is null will set main domain(set @ as prefix)
+          const domainPrefix = domainInfo.subDomain || '@'
+          console.log('cns deploy, prefix:' + domainPrefix)
+          const cnsOutput = await cns.deploy({
             records: [
               {
-                subDomain: item.domainPrefix,
+                domain: domainInfo.domain,
+                subDomain: domainPrefix,
                 recordType: 'CNAME',
                 recordLine: '默认',
                 value: item.cname,
@@ -119,10 +125,43 @@ class ServerlessComopnent extends Component {
               }
             ]
           })
+          console.log(`cns deploy result: ${JSON.stringify(cnsOutput)}`)
         }
       }
     } catch (e) {
-      console.log('METHOD_tryToAddDnsRecord', e.message)
+      console.log('METHOD_tryToAddDnsRecordForCusDomain', e.message)
+    }
+  }
+
+  // try to add dns record for cdn
+  async tryToAddDnsRecordForCdn(credentials, cdnInfo) {
+    try {
+      const cns = new Cns(credentials)
+      const domain = new Domain(credentials)
+      const domainInfo = await domain.check(cdnInfo.domain)
+      console.log(`Domain check result: ${JSON.stringify(domainInfo)}`)
+      if (domainInfo) {
+        // prefix is null will set main domain(set @ as prefix)
+        const domainPrefix = domainInfo.subDomain || '@'
+        console.log('cns deploy, prefix:' + domainPrefix)
+        const cnsOutput = await cns.deploy({
+          records: [
+            {
+              domain: domainInfo.domain,
+              subDomain: domainPrefix,
+              recordType: 'CNAME',
+              recordLine: '默认',
+              value: cdnInfo.cname,
+              ttl: 600,
+              mx: 10,
+              status: 'enable'
+            }
+          ]
+        })
+        console.log(`cns deploy result: ${JSON.stringify(cnsOutput)}`)
+      }
+    } catch (e) {
+      console.log('METHOD_tryToAddDnsRecordForCdn', e.message)
     }
   }
 
@@ -163,9 +202,9 @@ class ServerlessComopnent extends Component {
         }
 
         if (apigwOutput.customDomains) {
-          // TODO: need confirm add cns authentication
-          if (inputs.autoAddDnsRecord === true) {
-            // await this.tryToAddDnsRecord(credentials, apigwOutput.customDomains)
+          if (apigwInputs.autoAddDnsRecord === true) {
+            console.log('Starting try add dns record for customDomains')
+            await this.tryToAddDnsRecordForCusDomain(credentials, apigwOutput.customDomains)
           }
           outputs[curRegion].customDomains = apigwOutput.customDomains
         }
@@ -224,6 +263,11 @@ class ServerlessComopnent extends Component {
           cname: cdnDeployRes.cname
         }
         deployStaticOutpus.cdn = cdnOutput
+
+        if (cdnInputs.autoCreateDns) {
+          console.log('Starting try add dns record for cdn')
+          await this.tryToAddDnsRecordForCdn(credentials, cdnOutput)
+        }
 
         console.log(`Deploy cdn ${cdnInputs.domain} success`)
       }
