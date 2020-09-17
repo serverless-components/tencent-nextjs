@@ -98,47 +98,11 @@ class ServerlessComopnent extends Component {
     return outputs
   }
 
-  // try to add dns record for custom domains
-  async tryToAddDnsRecordForCusDomain(credentials, customDomains) {
+  async addDnsRecord(credentials, targetDomain, targetValue) {
     try {
       const cns = new Cns(credentials)
       const domain = new Domain(credentials)
-      for (let i = 0; i < customDomains.length; i++) {
-        const item = customDomains[0]
-        const domainInfo = await domain.check(item.subDomain)
-        console.log(`Domain check result: ${JSON.stringify(domainInfo)}`)
-        if (domainInfo) {
-          // prefix is null will set main domain(set @ as prefix)
-          const domainPrefix = domainInfo.subDomain || '@'
-          console.log('cns deploy, prefix:' + domainPrefix)
-          const cnsOutput = await cns.deploy({
-            records: [
-              {
-                domain: domainInfo.domain,
-                subDomain: domainPrefix,
-                recordType: 'CNAME',
-                recordLine: '默认',
-                value: item.cname,
-                ttl: 600,
-                mx: 10,
-                status: 'enable'
-              }
-            ]
-          })
-          console.log(`cns deploy result: ${JSON.stringify(cnsOutput)}`)
-        }
-      }
-    } catch (e) {
-      console.log('METHOD_tryToAddDnsRecordForCusDomain', e.message)
-    }
-  }
-
-  // try to add dns record for cdn
-  async tryToAddDnsRecordForCdn(credentials, cdnInfo) {
-    try {
-      const cns = new Cns(credentials)
-      const domain = new Domain(credentials)
-      const domainInfo = await domain.check(cdnInfo.domain)
+      const domainInfo = await domain.check(targetDomain)
       console.log(`Domain check result: ${JSON.stringify(domainInfo)}`)
       if (domainInfo) {
         // prefix is null will set main domain(set @ as prefix)
@@ -151,7 +115,7 @@ class ServerlessComopnent extends Component {
               subDomain: domainPrefix,
               recordType: 'CNAME',
               recordLine: '默认',
-              value: cdnInfo.cname,
+              value: targetValue,
               ttl: 600,
               mx: 10,
               status: 'enable'
@@ -161,8 +125,21 @@ class ServerlessComopnent extends Component {
         console.log(`cns deploy result: ${JSON.stringify(cnsOutput)}`)
       }
     } catch (e) {
-      console.log('METHOD_tryToAddDnsRecordForCdn', e.message)
+      console.log('METHOD_tryToAddDnsRecord', e.message)
     }
+  }
+
+  // try to add dns record for custom domains
+  async tryToAddDnsRecordForCusDomain(credentials, customDomains) {
+    for (let i = 0; i < customDomains.length; i++) {
+      const item = customDomains[0]
+      await this.addDnsRecord(credentials, item.subDomain, item.cname)
+    }
+  }
+
+  // try to add dns record for cdn
+  async tryToAddDnsRecordForCdn(credentials, cdnInfo) {
+    await this.addDnsRecord(credentials, cdnInfo.domain, cdnInfo.cname)
   }
 
   async deployApigateway(credentials, inputs, regionList) {
@@ -202,7 +179,7 @@ class ServerlessComopnent extends Component {
         }
 
         if (apigwOutput.customDomains) {
-          if (apigwInputs.autoAddDnsRecord === true) {
+          if (apigwInputs.autoCreateDns === true) {
             console.log('Starting try add dns record for customDomains')
             await this.tryToAddDnsRecordForCusDomain(credentials, apigwOutput.customDomains)
           }
