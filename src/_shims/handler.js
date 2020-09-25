@@ -21,7 +21,11 @@ module.exports.handler = async (event, context) => {
   app.request.__SLS_CONTEXT__ = context
 
   if (!server) {
-    server = createServer(app, null, app.binaryTypes || [])
+    server = createServer(
+      app.callback && typeof app.callback === 'function' ? app.callback() : app,
+      null,
+      app.binaryTypes || []
+    )
   }
 
   context.callbackWaitsForEmptyEventLoop =

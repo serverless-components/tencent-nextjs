@@ -169,9 +169,13 @@ Next.js 组件将在腾讯云账户中使用到如下 Serverless 服务：
 
 ## 更多组件
 
-可以在 [Serverless Components](https://github.com/serverless/components) repo 中查询更多组件的信息。
+可以在 [Serverless Components](https://github.com/serverless/components) 仓库中查询更多组件的信息。
 
-## 项目迁移 - 自定义 express 服务
+## 项目迁移
+
+如果项目使用了自定义 Node.js 服务，比如 express 或者 koa，你需要做如下改造工作。
+
+### 自定义 express 服务
 
 如果你的 Next.js 项目本身运行就是基于 `express` 自定义服务的，那么你需要在项目中自定义入口文件 `sls.js`，需要参考你的服务启动文件进行修改，以下是一个模板文件：
 
@@ -179,16 +183,16 @@ Next.js 组件将在腾讯云账户中使用到如下 Serverless 服务：
 const express = require('express')
 const next = require('next')
 
-const app = next({ dev: false })
-const handle = app.getRequestHandler()
-
 // not report route for custom monitor
 const noReportRoutes = ['/_next', '/static', '/favicon.ico']
 
 async function createServer() {
-  await app.prepare()
-  const server = express()
+  const app = next({ dev: false })
+  const handle = app.getRequestHandler()
 
+  await app.prepare()
+
+  const server = express()
   server.all('*', (req, res) => {
     noReportRoutes.forEach((route) => {
       if (req.path.indexOf(route) !== -1) {
@@ -196,6 +200,37 @@ async function createServer() {
       }
     })
     return handle(req, res)
+  })
+
+  // define binary type for response
+  // if includes, will return base64 encoded, very useful for images
+  server.binaryTypes = ['*/*']
+
+  return server
+}
+
+module.exports = createServer
+```
+
+### 自定义 koa 服务
+
+如果你的项目使用的是 Koa 作为 Node.js 服务，需要在项目中自定义入口文件 `sls.js`，需要参考你的服务启动文件进行修改，以下是一个模板文件：
+
+```js
+const Koa = require('koa')
+const next = require('next')
+
+async function createServer() {
+  const app = next({ dev: false })
+  const handle = app.getRequestHandler()
+
+  const server = new Koa()
+  server.use((ctx) => {
+    ctx.status = 200
+    ctx.respond = false
+    ctx.req.ctx = ctx
+
+    return handle(ctx.req, ctx.res)
   })
 
   // define binary type for response
