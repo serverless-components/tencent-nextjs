@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { generateId, getServerlessSdk } = require('./utils')
 const axios = require('axios')
 
@@ -20,14 +21,17 @@ const instanceYaml = {
 
 // get credentials from process.env but need to init empty credentials object
 const credentials = {
-  tencent: {}
+  tencent: {
+    SecretId: process.env.TENCENT_SECRET_ID,
+    SecretKey: process.env.TENCENT_SECRET_KEY,
+  }
 }
 
 // get serverless construct sdk
 const sdk = getServerlessSdk(instanceYaml.org)
 
 it('should successfully deploy nextjs app', async () => {
-  const instance = await sdk.deploy(instanceYaml, { tencent: {} })
+  const instance = await sdk.deploy(instanceYaml, credentials)
 
   expect(instance).toBeDefined()
   expect(instance.instanceName).toEqual(instanceYaml.name)
