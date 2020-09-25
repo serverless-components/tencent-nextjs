@@ -1,9 +1,4 @@
 {
-  "name": "@serverless/nextjs",
-  "main": "./handler.js",
-  "scripts": {},
-  "author": "Tencent Cloud, Inc.",
-  "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
     "tencent-component-monitor": "^1.1.0",
