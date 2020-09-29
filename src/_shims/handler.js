@@ -7,10 +7,10 @@ let server
 let app
 
 module.exports.handler = async (event, context) => {
-  const userSls = path.join(__dirname, '..', 'sls.js')
+  const userSls = path.join(__dirname, '..', process.env.SLS_ENTRY_FILE)
   if (fs.existsSync(userSls)) {
     // eslint-disable-next-line
-    console.log('Using user custom sls.js')
+    console.log(`Using user custom entry file ${process.env.SLS_ENTRY_FILE}`)
     app = await require(userSls)(true)
   } else {
     app = await require('./sls')(false)
