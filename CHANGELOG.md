@@ -1,3 +1,10 @@
+## [0.1.5](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.4...v0.1.5) (2020-09-29)
+
+
+### Bug Fixes
+
+* support customize sls entry file ([eb5d6b3](https://github.com/serverless-components/tencent-nextjs/commit/eb5d6b3c2406ce7a225296d3e541f1efda029dd5))
+
 ## [0.1.4](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.3...v0.1.4) (2020-09-25)
 
 
