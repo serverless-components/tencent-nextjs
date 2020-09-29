@@ -3,6 +3,7 @@ const CONFIGS = {
     'https://serverless-templates-1300862921.cos.ap-beijing.myqcloud.com/nextjs-demo.zip',
   compName: 'nextjs',
   compFullname: 'Next.js',
+  defaultEntryFile: 'sls.js',
   handler: 'sl_handler.handler',
   runtime: 'Nodejs10.15',
   timeout: 3,

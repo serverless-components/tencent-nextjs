@@ -356,6 +356,16 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
 
   if (tempFunctionConf.environment) {
     functionConf.environment = inputs.functionConf.environment
+    functionConf.environment.variables = functionConf.environment.variables || {}
+    functionConf.environment.variables.SERVERLESS = '1'
+    functionConf.environment.variables.SLS_ENTRY_FILE = inputs.entryFile || CONFIGS.defaultEntryFile
+  } else {
+    functionConf.environment = {
+      variables: {
+        SERVERLESS: '1',
+        SLS_ENTRY_FILE: inputs.entryFile || CONFIGS.defaultEntryFile
+      }
+    }
   }
   if (tempFunctionConf.vpcConfig) {
     functionConf.vpcConfig = inputs.functionConf.vpcConfig
