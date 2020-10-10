@@ -1,3 +1,10 @@
+## [0.1.6](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.5...v0.1.6) (2020-10-10)
+
+
+### Bug Fixes
+
+* support all configs for scf ([52b8f51](https://github.com/serverless-components/tencent-nextjs/commit/52b8f51b1cebcf8d16a658454256f4f6014f7e0b))
+
 ## [0.1.5](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.4...v0.1.5) (2020-09-29)
 
 
