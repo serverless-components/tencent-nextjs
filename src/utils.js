@@ -288,7 +288,11 @@ const prepareStaticCdnInputs = async (instance, inputs, origin) => {
 
 const prepareInputs = async (instance, credentials, inputs = {}) => {
   // 对function inputs进行标准化
-  const tempFunctionConf = inputs.functionConf ? inputs.functionConf : {}
+  const tempFunctionConf = inputs.functionConf
+    ? inputs.functionConf
+    : inputs.functionConfig
+    ? inputs.functionConfig
+    : {}
   const fromClientRemark = `tencent-${CONFIGS.compName}`
   const regionList = inputs.region
     ? typeof inputs.region == 'string'
@@ -366,35 +370,44 @@ const prepareInputs = async (instance, credentials, inputs = {}) => {
     }
   }
   if (tempFunctionConf.vpcConfig) {
-    functionConf.vpcConfig = inputs.functionConf.vpcConfig
+    functionConf.vpcConfig = tempFunctionConf.vpcConfig
   }
 
   // 对apigw inputs进行标准化
-  const tempApigwConf = inputs.apigatewayConf ? inputs.apigatewayConf : {}
+  const tempApigwConf = inputs.apigatewayConf
+    ? inputs.apigatewayConf
+    : inputs.apigwConfig
+    ? inputs.apigwConfig
+    : {}
   const apigatewayConf = Object.assign(tempApigwConf, {
-    serviceId: inputs.serviceId,
+    serviceId: inputs.serviceId || tempApigwConf.serviceId,
     region: regionList,
     isDisabled: tempApigwConf.isDisabled === true,
     fromClientRemark: fromClientRemark,
-    serviceName: inputs.serviceName || getDefaultServiceName(instance),
-    description: getDefaultServiceDescription(instance),
+    serviceName: inputs.serviceName || tempApigwConf.serviceName || getDefaultServiceName(instance),
+    serviceDesc: tempApigwConf.serviceDesc || getDefaultServiceDescription(instance),
     protocols: tempApigwConf.protocols || ['http'],
     environment: tempApigwConf.environment ? tempApigwConf.environment : 'release',
-    endpoints: [
+    customDomains: tempApigwConf.customDomains || []
+  })
+  if (!apigatewayConf.endpoints) {
+    apigatewayConf.endpoints = [
       {
-        path: '/',
+        path: tempApigwConf.path || '/',
         enableCORS: tempApigwConf.enableCORS,
         serviceTimeout: tempApigwConf.serviceTimeout,
         method: 'ANY',
+        apiName: tempApigwConf.apiName || 'index',
         function: {
           isIntegratedResponse: true,
           functionName: functionConf.name,
-          functionNamespace: functionConf.namespace
+          functionNamespace: functionConf.namespace,
+          functionQualifier:
+            (tempApigwConf.function && tempApigwConf.function.functionQualifier) || '$LATEST'
         }
       }
-    ],
-    customDomains: tempApigwConf.customDomains || []
-  })
+    ]
+  }
   if (tempApigwConf.usagePlan) {
     apigatewayConf.endpoints[0].usagePlan = {
       usagePlanId: tempApigwConf.usagePlan.usagePlanId,
