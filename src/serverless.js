@@ -159,7 +159,7 @@ class ServerlessComopnent extends Component {
           environment: apigwOutput.environment,
           url: `${getDefaultProtocol(inputs.protocols)}://${apigwOutput.subDomain}/${
             apigwOutput.environment
-          }/`
+          }${apigwInputs.endpoints[0].path}`
         }
 
         if (apigwOutput.customDomains) {

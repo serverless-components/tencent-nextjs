@@ -17,3 +17,4 @@ inputs:
       - http
       - https
     environment: release
+    serviceName: test
