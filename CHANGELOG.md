@@ -1,3 +1,10 @@
+## [0.1.7](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.6...v0.1.7) (2020-10-12)
+
+
+### Bug Fixes
+
+* support all parameters for apigw ([5e22cf3](https://github.com/serverless-components/tencent-nextjs/commit/5e22cf3595c1adfcf84de008d7af94bfc1bc4184))
+
 ## [0.1.6](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.5...v0.1.6) (2020-10-10)
 
 
