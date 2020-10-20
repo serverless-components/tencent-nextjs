@@ -1,3 +1,10 @@
+## [0.1.8](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.7...v0.1.8) (2020-10-20)
+
+
+### Bug Fixes
+
+* support replace deployment and cos assets ([85e9b7c](https://github.com/serverless-components/tencent-nextjs/commit/85e9b7c7dea22fb1eb991de4aca5cfcedc6035a7))
+
 ## [0.1.7](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.6...v0.1.7) (2020-10-12)
 
 
