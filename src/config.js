@@ -11,7 +11,7 @@ const CONFIGS = {
   namespace: 'default',
   description: 'Created by Serverless Component',
   defaultStatics: [
-    { src: '.next', targetDir: '/_next' },
+    { src: '.next/static', targetDir: '/_next/static' },
     { src: 'public', targetDir: '/' }
   ],
   defaultCdnConf: {

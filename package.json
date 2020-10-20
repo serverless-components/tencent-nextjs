@@ -4,6 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "description": "Tencent Cloud Next.js Serverless Component",
   "scripts": {
     "test": "jest ./tests/integration.test.js --testEnvironment node",
     "commitlint": "commitlint -f HEAD@{15}",
@@ -57,5 +58,26 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "semantic-release": "^17.0.4"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "example",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serverless-components/tencent-nextjs.git"
+  },
+  "keywords": [
+    "serverless-nextjs",
+    "nextjs",
+    "serverless",
+    "serverless-framework",
+    "serverless-components",
+    "tencent-cloud"
+  ],
+  "bugs": {
+    "url": "https://github.com/serverless-components/tencent-nextjs/issues"
+  },
+  "homepage": "https://github.com/serverless-components/tencent-nextjs#readme"
 }
