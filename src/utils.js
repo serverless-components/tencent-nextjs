@@ -224,7 +224,10 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
         staticCosInputs.push(cosInputs)
       }
     }
-    return staticCosInputs
+    return {
+      bucket: `${bucketName}-${appId}`,
+      staticCosInputs
+    }
   } catch (e) {
     throw new TypeError(
       `UTILS_${CONFIGS.compName.toUpperCase()}_prepareStaticCosInputs`,

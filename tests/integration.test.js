@@ -1,4 +1,7 @@
-require('dotenv').config()
+const path = require('path')
+require('dotenv').config({
+  path: path.join(__dirname, '..', '.env.test')
+})
 const { generateId, getServerlessSdk } = require('./utils')
 const axios = require('axios')
 

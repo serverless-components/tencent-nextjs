@@ -4,7 +4,7 @@ const Home = () => (
   <div className="container">
     <Head>
       <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href={`${process.env.STATIC_URL}/favicon.ico`} />
     </Head>
 
     <main>

@@ -1,7 +1,7 @@
 org: orgDemo
 app: appDemo
 stage: dev
-component: nextjs
+component: nextjs@dev
 name: nextjsDemo
 
 inputs:
@@ -17,3 +17,7 @@ inputs:
       - http
       - https
     environment: release
+  staticConf:
+    cosConf:
+      replace: true
+      bucket: nextjs-demo
