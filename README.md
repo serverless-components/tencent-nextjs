@@ -44,28 +44,29 @@ $ npm install -g serverless
 
 ### 2. 创建
 
-通过如下命令，快速创建一个 Next.js 项目
+通过如下命令和模板链接，快速创建一个 Next.js 应用：
 
 ```bash
 $ serverless init nextjs-starter --name example
 $ cd example
 ```
 
-
 ### 3. 部署
 
-在 serverless.yml 文件下的目录中运行以下指令进行部署：
+在 `serverless.yml` 文件所在的项目根目录，运行以下指令，将会弹出二维码，直接扫码授权进行部署：
 
-```bash
-$ sls deploy
+```
+serverless deploy
 ```
 
-部署时需要进行身份验证，如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
-
-> 注意: 如果希望查看更多部署过程的信息，可以通过`sls deploy --debug` 命令查看部署过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
-> `sls` 是 `serverless` 命令的简写。
+> **说明**：如果鉴权失败，请参考 [权限配置](https://cloud.tencent.com/document/product/1154/43006) 进行授权。
 
 ### 4. 配置
+
+nextjs 组件支持 0 配置部署，也就是可以直接通过配置文件中的默认值进行部署。但你依然可以修改更多可选配置来进一步开发该 nextjs 项目。
+
+以下是 nextjs 组件的 `serverless.yml`配置示例：
+
 
 ```yml
 # serverless.yml
@@ -113,10 +114,10 @@ $ serverless info
 在`serverless.yml`文件所在的目录下，通过以下命令移除部署通过以下命令移除部署的 API 网关，移除后该组件会对应删除云上部署时所创建的所有相关资源。
 
 ```bash
-$ sls remove
+$ serverless remove
 ```
 
-和部署类似，支持通过 `sls remove --debug` 命令查看移除过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
+和部署类似，支持通过 `serverless remove --debug` 命令查看移除过程中的实时日志信息。
 
 ### 账号配置
 
@@ -137,6 +138,8 @@ $ touch .env # 腾讯云的配置信息
 TENCENT_SECRET_ID=123
 TENCENT_SECRET_KEY=123
 ```
+
+> 注意：海外 ip 登录时，需要在`.env`文件中添加`SERVERLESS_PLATFORM_VENDOR=tencent` ，使 serverless 默认使用 tencent 组件
 
 ## 架构说明
 
