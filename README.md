@@ -34,19 +34,6 @@
 - [**更多组件**](#更多组件)
 - [**FAQ**](#FAQ)
 
-### 0. 准备
-
-#### 初始化 Next.js 项目
-
-首先，在本地创建一个 Next.js 项目并初始化：
-
-```bash
-$ npm init next-app serverless-next
-
-# cd into project folder after init
-$ cd serverless-next
-```
-
 ### 1. 安装
 
 通过 npm 全局安装 [serverless cli](https://github.com/serverless/serverless)
@@ -55,13 +42,30 @@ $ cd serverless-next
 $ npm install -g serverless
 ```
 
-### 2. 配置
+### 2. 创建
 
-在项目根目录创建 `serverless.yml` 文件，在其中进行如下配置
+通过如下命令，快速创建一个 Next.js 项目
 
 ```bash
-$ touch serverless.yml
+$ serverless init nextjs-starter --name example
+$ cd example
 ```
+
+
+### 3. 部署
+
+在 serverless.yml 文件下的目录中运行以下指令进行部署：
+
+```bash
+$ sls deploy
+```
+
+部署时需要进行身份验证，如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
+
+> 注意: 如果希望查看更多部署过程的信息，可以通过`sls deploy --debug` 命令查看部署过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
+> `sls` 是 `serverless` 命令的简写。
+
+### 4. 配置
 
 ```yml
 # serverless.yml
@@ -88,28 +92,7 @@ inputs:
 
 - 点此查看[更多配置及说明](/docs/configure.md)
 
-### 3. 部署
-
-#### 3.1 构建静态资源
-
-```bash
-$ npm run build
-```
-
-#### 3.2 部署到云端
-
-在 serverless.yml 文件下的目录中运行以下指令进行部署：
-
-```bash
-$ sls deploy
-```
-
-部署时需要进行身份验证，如您的账号未 [登陆](https://cloud.tencent.com/login) 或 [注册](https://cloud.tencent.com/register) 腾讯云，您可以直接通过 `微信` 扫描命令行中的二维码进行授权登陆和注册。
-
-> 注意: 如果希望查看更多部署过程的信息，可以通过`sls deploy --debug` 命令查看部署过程中的实时日志信息，`sls`是 `serverless` 命令的缩写。
-> `sls` 是 `serverless` 命令的简写。
-
-### 4. 开发调试
+### 5. 开发调试
 
 部署了 Next.js 应用后，可以通过开发调试能力对该项目进行二次开发，从而开发一个生产应用。在本地修改和更新代码后，不需要每次都运行 `serverless deploy` 命令来反复部署。你可以直接通过 `serverless dev` 命令对本地代码的改动进行检测和自动上传。
 
@@ -117,7 +100,7 @@ $ sls deploy
 
 `serverless dev` 同时支持实时输出云端日志，每次部署完毕后，对项目进行访问，即可在命令行中实时输出调用日志，便于查看业务情况和排障。
 
-### 5. 查看部署状态
+### 6. 查看部署状态
 
 在`serverless.yml`文件所在的目录下，通过如下命令查看部署状态：
 
