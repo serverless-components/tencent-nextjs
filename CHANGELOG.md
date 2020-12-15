@@ -1,3 +1,10 @@
+## [0.1.9](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.8...v0.1.9) (2020-12-15)
+
+
+### Bug Fixes
+
+* update to deployment to serial flow ([f96518a](https://github.com/serverless-components/tencent-nextjs/commit/f96518a4f2f3254f7b7c2c74e8cb3e383e176595))
+
 ## [0.1.8](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.7...v0.1.8) (2020-10-20)
 
 
