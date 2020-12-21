@@ -358,10 +358,6 @@ class ServerlessComopnent extends Component {
       const scf = new Scf(credentials, curRegion)
       const apigw = new Apigw(credentials, curRegion)
       const handler = async () => {
-        await scf.remove({
-          functionName: curState.functionName,
-          namespace: curState.namespace
-        })
         // if disable apigw, no need to remove
         if (state.apigwDisabled !== true) {
           await apigw.remove({
@@ -372,6 +368,10 @@ class ServerlessComopnent extends Component {
             customDomains: curState.customDomains
           })
         }
+        await scf.remove({
+          functionName: curState.functionName,
+          namespace: curState.namespace
+        })
       }
       removeHandlers.push(handler())
     }
