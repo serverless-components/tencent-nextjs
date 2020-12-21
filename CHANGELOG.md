@@ -1,3 +1,10 @@
+## [0.1.10](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.9...v0.1.10) (2020-12-21)
+
+
+### Bug Fixes
+
+* update remove flow ([#18](https://github.com/serverless-components/tencent-nextjs/issues/18)) ([a343607](https://github.com/serverless-components/tencent-nextjs/commit/a34360709ee03c35027a349956a7ed59b56464ed))
+
 ## [0.1.9](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.8...v0.1.9) (2020-12-15)
 
 
