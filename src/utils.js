@@ -178,6 +178,7 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
   try {
     const staticCosInputs = []
     const { cosConf } = inputs
+    const region = inputs.region || CONFIGS.region
     const sources = cosConf.sources || CONFIGS.defaultStatics
     const { bucket } = cosConf
     // remove user append appid
@@ -203,23 +204,11 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath) => {
           protocol: cosConf.protocol,
           bucket: `${bucketName}-${appId}`,
           src: `${staticPath}/${entryName}`,
-          keyPrefix: curSource.targetDir || '/',
-          acl: {
-            permissions: 'public-read',
-            grantRead: '',
-            grantWrite: '',
-            grantFullControl: ''
-          }
+          keyPrefix: curSource.targetDir || '/'
         }
 
-        if (cosConf.acl) {
-          cosInputs.acl = {
-            permissions: cosConf.acl.permissions || 'public-read',
-            grantRead: cosConf.acl.grantRead || '',
-            grantWrite: cosConf.acl.grantWrite || '',
-            grantFullControl: cosConf.acl.grantFullControl || ''
-          }
-        }
+        // 通过设置 policy 来支持公网访问
+        cosInputs.policy = CONFIGS.getPolicy(region, bucket, appId)
 
         staticCosInputs.push(cosInputs)
       }

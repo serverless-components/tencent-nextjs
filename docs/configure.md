@@ -74,8 +74,6 @@ inputs:
   staticConf:
     cosConf:
       bucket: static-bucket
-      acl:
-        permissions: public-read
       sources:
         - src: .next/static
           targetDir: /_next/static
@@ -235,17 +233,11 @@ Refer to: https://cloud.tencent.com/document/product/628/14906
 
 ##### COS 配置
 
-| 参数名称 | 是否必选 |   类型   |                                         默认值                                         | 描述                             |
-| -------- | :------: | :------: | :------------------------------------------------------------------------------------: | :------------------------------- |
-| bucket   |    是    |  string  |                                                                                        | COS 存储同名称，没有将自动创建   |
-| acl      |    否    |  Object  |                                                                                        | 存储桶权限配置，参考 [acl](#acl) |
-| sources  |    否    | Object[] | `[{src: '.next/static', targetDir: '/_next/static'}, {src: 'public', targetDir: '/'}]` | 需要托管到 COS 的静态资源目录    |
-
-###### acl
-
-| 参数名称    | 是否必选 |  类型  |    默认值     | 描述         |
-| ----------- | :------: | :----: | :-----------: | :----------- |
-| permissions |    是    | string | `public-read` | 公共权限配置 |
+| 参数名称 | 是否必选 |   类型   |                                         默认值                                         | 描述                           |
+| -------- | :------: | :------: | :------------------------------------------------------------------------------------: | :----------------------------- |
+| bucket   |    是    |  string  |                                                                                        | COS 存储同名称，没有将自动创建 |
+| (#acl)   |
+| sources  |    否    | Object[] | `[{src: '.next/static', targetDir: '/_next/static'}, {src: 'public', targetDir: '/'}]` | 需要托管到 COS 的静态资源目录  |
 
 ##### CDN 配置
 
