@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.10...v0.2.0) (2021-01-26)
+
+
+### Features
+
+* support apigw base64 encode ([444567e](https://github.com/serverless-components/tencent-nextjs/commit/444567e129da21d3440849e037df49e6925b6f76))
+
 ## [0.1.10](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.9...v0.1.10) (2020-12-21)
 
 
