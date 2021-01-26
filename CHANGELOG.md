@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/serverless-components/tencent-nextjs/compare/v0.2.0...v0.2.1) (2021-01-26)
+
+
+### Bug Fixes
+
+* change cos access by policy ([677c524](https://github.com/serverless-components/tencent-nextjs/commit/677c524868b736ea9bc839e1e235c4d46d58f780))
+
 # [0.2.0](https://github.com/serverless-components/tencent-nextjs/compare/v0.1.10...v0.2.0) (2021-01-26)
 
 
