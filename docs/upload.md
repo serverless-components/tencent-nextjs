@@ -5,8 +5,8 @@
 ```yaml
 app: appDemo
 stage: dev
-component: nuxtjs
-name: nuxtjsDemo
+component: nextjs
+name: nextjsDemo
 
 inputs:
   # 省略...

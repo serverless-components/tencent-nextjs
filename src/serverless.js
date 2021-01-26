@@ -194,7 +194,13 @@ class ServerlessComopnent extends Component {
     if (zipPath) {
       console.log(`Deploy static for ${CONFIGS.compFullname} application`)
       // 1. deploy to cos
-      const { staticCosInputs, bucket } = await prepareStaticCosInputs(this, inputs, appId, zipPath)
+      const { staticCosInputs, bucket } = await prepareStaticCosInputs(
+        this,
+        inputs,
+        appId,
+        zipPath,
+        region
+      )
 
       const cos = new Cos(credentials, region)
       const cosOutput = {
