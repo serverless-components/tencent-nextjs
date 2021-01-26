@@ -239,6 +239,10 @@ server.get('/no-report', (req, res) => {
 
 那么用户在访问 `GET /no-report` 路由时，就不会上报自定义监控指标。
 
+## 文件上传
+
+[文件上传教程](https://github.com/serverless-components/tencent-nextjs/tree/master/docs/upload.md)
+
 ## License
 
 MIT License
