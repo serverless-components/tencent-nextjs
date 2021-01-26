@@ -43,6 +43,7 @@ inputs:
       subnetId: '' # 子网ID
   apigatewayConf: #  api网关配置
     isDisabled: false # 是否禁用自动创建 API 网关功能
+    isBase64Encoded: false # 是否开启 base64 编码
     enableCORS: true #  允许跨域
     customDomains: # 自定义域名绑定
       - domain: abc.com # 待绑定的自定义的域名
@@ -174,16 +175,17 @@ inputs:
 
 ### API 网关配置
 
-| 参数名称       | 是否必选 | 类型     | 默认值     | 描述                                                                               |
-| -------------- | :------: | :------- | :--------- | :--------------------------------------------------------------------------------- |
-| protocols      |    否    | String[] | `['http']` | 前端请求的类型，如 http，https，http 与 https                                      |
-| environment    |    否    | String   | `release`  | 发布环境. 目前支持三种发布环境: test（测试）, prepub（预发布） 与 release（发布）. |
-| usagePlan      |    否    |          |            | 使用计划配置, 参考 [使用计划](#使用计划)                                           |
-| auth           |    否    |          |            | API 密钥配置, 参考 [API 密钥](#API-密钥配置)                                       |
-| customDomain   |    否    | Object[] |            | 自定义 API 域名配置, 参考 [自定义域名](#自定义域名)                                |
-| enableCORS     |    否    | Boolean  | `false`    | 开启跨域。默认值为否。                                                             |
-| serviceTimeout |    否    | Number   | `15`       | Api 超时时间，单位: 秒                                                             |
-| isDisabled     |    否    | Boolean  | `false`    | 关闭自动创建 API 网关功能。默认值为否，即默认自动创建 API 网关。                   |
+| 参数名称        | 是否必选 | 类型     | 默认值     | 描述                                                                               |
+| --------------- | :------: | :------- | :--------- | :--------------------------------------------------------------------------------- |
+| protocols       |    否    | String[] | `['http']` | 前端请求的类型，如 http，https，http 与 https                                      |
+| environment     |    否    | String   | `release`  | 发布环境. 目前支持三种发布环境: test（测试）, prepub（预发布） 与 release（发布）. |
+| usagePlan       |    否    |          |            | 使用计划配置, 参考 [使用计划](#使用计划)                                           |
+| auth            |    否    |          |            | API 密钥配置, 参考 [API 密钥](#API-密钥配置)                                       |
+| customDomain    |    否    | Object[] |            | 自定义 API 域名配置, 参考 [自定义域名](#自定义域名)                                |
+| enableCORS      |    否    | Boolean  | `false`    | 开启跨域。默认值为否。                                                             |
+| serviceTimeout  |    否    | Number   | `15`       | Api 超时时间，单位: 秒                                                             |
+| isDisabled      |    否    | Boolean  | `false`    | 关闭自动创建 API 网关功能。默认值为否，即默认自动创建 API 网关。                   |
+| isBase64Encoded |    否    | Boolean  | `false`    | 是否开启 Base64 编码，如果需要文件上传，请配置为 `true`                            |
 
 ##### 使用计划
 
