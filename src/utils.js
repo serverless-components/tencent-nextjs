@@ -1,6 +1,6 @@
 const path = require('path')
 const { Cos } = require('tencent-component-toolkit')
-const { TypeError } = require('tencent-component-toolkit/src/utils/error')
+const { ApiTypeError } = require('tencent-component-toolkit/lib/utils/error')
 const ensureObject = require('type/object/ensure')
 const ensureIterable = require('type/iterable/ensure')
 const ensureString = require('type/string/ensure')
@@ -62,13 +62,13 @@ const removeAppid = (str, appid) => {
 
 const validateTraffic = (num) => {
   if (getType(num) !== 'Number') {
-    throw new TypeError(
+    throw new ApiTypeError(
       `PARAMETER_${CONFIGS.compName.toUpperCase()}_TRAFFIC`,
       'traffic must be a number'
     )
   }
   if (num < 0 || num > 1) {
-    throw new TypeError(
+    throw new ApiTypeError(
       `PARAMETER_${CONFIGS.compName.toUpperCase()}_TRAFFIC`,
       'traffic must be a number between 0 and 1'
     )
@@ -92,7 +92,7 @@ const getCodeZipPath = async (instance, inputs) => {
         filename: `${filename}.zip`
       })
     } catch (e) {
-      throw new TypeError(`DOWNLOAD_TEMPLATE`, 'Download default template failed.')
+      throw new ApiTypeError(`DOWNLOAD_TEMPLATE`, 'Download default template failed.')
     }
     zipPath = `${downloadPath}/${filename}.zip`
   } else {
@@ -217,7 +217,7 @@ const prepareStaticCosInputs = async (instance, inputs, appId, codeZipPath, regi
       staticCosInputs
     }
   } catch (e) {
-    throw new TypeError(
+    throw new ApiTypeError(
       `UTILS_${CONFIGS.compName.toUpperCase()}_prepareStaticCosInputs`,
       e.message,
       e.stack
@@ -245,7 +245,7 @@ const prepareStaticCdnInputs = async (instance, inputs, origin) => {
       // using these default configs, for making user's config more simple
       cdnInputs.forceRedirect = cdnConf.https.forceRedirect || CONFIGS.defaultCdnConf.forceRedirect
       if (!cdnConf.https.certId) {
-        throw new TypeError(
+        throw new ApiTypeError(
           `PARAMETER_${CONFIGS.compName.toUpperCase()}_HTTPS`,
           'https.certId is required'
         )
@@ -269,7 +269,7 @@ const prepareStaticCdnInputs = async (instance, inputs, origin) => {
 
     return cdnInputs
   } catch (e) {
-    throw new TypeError(
+    throw new ApiTypeError(
       `UTILS_${CONFIGS.compName.toUpperCase()}_prepareStaticCdnInputs`,
       e.message,
       e.stack
