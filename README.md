@@ -1,3 +1,5 @@
+⚠️⚠️⚠️ 所有框架组件项目迁移到 [tencent-framework-components](https://github.com/serverless-components/tencent-framework-components).
+
 [![Serverless Nextjs Tencent Cloud](https://img.serverlesscloud.cn/2020224/1582553715762-next.js_%E9%95%BF.png)](http://serverless.com)
 
 &nbsp;
