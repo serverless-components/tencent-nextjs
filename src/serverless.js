@@ -1,6 +1,6 @@
 const { Component } = require('@serverless/core')
 const { Scf, Apigw, Cns, Cam, Metrics, Cos, Cdn } = require('tencent-component-toolkit')
-const { TypeError } = require('tencent-component-toolkit/src/utils/error')
+const { ApiTypeError } = require('tencent-component-toolkit/lib/utils/error')
 const {
   deepClone,
   uploadCodeToCos,
@@ -16,7 +16,7 @@ class ServerlessComopnent extends Component {
     const { tmpSecrets } = this.credentials.tencent
 
     if (!tmpSecrets || !tmpSecrets.TmpSecretId) {
-      throw new TypeError(
+      throw new ApiTypeError(
         'CREDENTIAL',
         'Cannot get secretId/Key, your account could be sub-account and does not have the access to use SLS_QcsRole, please make sure the role exists first, then visit https://cloud.tencent.com/document/product/1154/43006, follow the instructions to bind the role to your account.'
       )
@@ -357,6 +357,8 @@ class ServerlessComopnent extends Component {
 
     const credentials = this.getCredentials()
 
+    console.log({ credentials })
+
     const removeHandlers = []
     for (let i = 0; i < regionList.length; i++) {
       const curRegion = regionList[i]
@@ -393,14 +395,14 @@ class ServerlessComopnent extends Component {
   async metrics(inputs = {}) {
     console.log(`Get ${CONFIGS.compFullname} Metrics Datas...`)
     if (!inputs.rangeStart || !inputs.rangeEnd) {
-      throw new TypeError(
+      throw new ApiTypeError(
         `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
         'rangeStart and rangeEnd are require inputs'
       )
     }
     const { region } = this.state
     if (!region) {
-      throw new TypeError(
+      throw new ApiTypeError(
         `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
         'No region property in state'
       )
@@ -428,7 +430,7 @@ class ServerlessComopnent extends Component {
       )
       return metricResults
     }
-    throw new TypeError(
+    throw new ApiTypeError(
       `PARAMETER_${CONFIGS.compName.toUpperCase()}_METRICS`,
       'Function name not define'
     )
