@@ -1,6 +1,6 @@
 stage: dev
-component: nextjs@dev
-name: nextjsDemo117o
+component: nextjs
+name: nextjsDemo
 
 inputs:
   src:
