@@ -1,5 +1,5 @@
 name: nextjs
-version: 1.0.12
+version: 1.0.13
 author: 'Tencent Cloud, Inc.'
 org: 'Tencent Cloud, Inc.'
 description: Deploy a serverless Next.js application onto Tencent SCF and API Gateway.

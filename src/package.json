@@ -2,7 +2,9 @@
   "dependencies": {
     "adm-zip": "^0.4.16",
     "download": "^8.0.0",
-    "tencent-component-toolkit": "^1.20.10",
+    "fs-extra": "^9.1.0",
+    "js-yaml": "^4.0.0",
+    "tencent-component-toolkit": "2.23.2",
     "type": "^2.1.0"
   }
 }

@@ -1,4 +1,3 @@
-app: appDemo
 stage: dev
 component: nextjs
 name: nextjsDemo
