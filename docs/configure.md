@@ -99,7 +99,7 @@ inputs:
 
 | 参数名称                             | 必选 |     默认值      | 描述                                                            |
 | ------------------------------------ | :--: | :-------------: | :-------------------------------------------------------------- |
-| runtime                              |  否  |  `Nodejs10.15`  | 执行环境, 支持: Nodejs6.10, Nodejs8.9, Nodejs10.15, Nodejs12.16 |
+| runtime                              |  否  |  `Nodejs10.15`  | 执行环境, 支持版本参考：[目前维护版本](https://cloud.tencent.com/document/product/583/11060)  |
 | region                               |  否  | `ap-guangzhou`  | 项目部署所在区域                                                |
 | functionName                         |  否  |                 | 云函数名称                                                      |
 | serviceName                          |  否  |                 | API 网关服务名称, 默认创建一个新的服务名称                      |
